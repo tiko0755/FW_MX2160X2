@@ -12,9 +12,11 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STM32G030C8Tx</Device>
+          <Device>STM32G070CBTx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <Cpu>IRAM(0x20000000-0x20001FFF) IROM(0x8000000-0x800FFFF) CLOCK(8000000) CPUTYPE("Cortex-M0+") TZ</Cpu>
+          <PackID>Keil.STM32G0xx_DFP.1.4.0</PackID>
+          <PackURL>http://www.keil.com/pack/</PackURL>
+          <Cpu>IRAM(0x20000000-0x20008FFF) IROM(0x8000000-0x801FFFF)  CLOCK(8000000) CPUTYPE("Cortex-M0+") TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
@@ -29,7 +31,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile></SFDFile>
+          <SFDFile>$$Device:STM32G070CBTx$CMSIS\SVD\STM32G070.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -240,7 +242,7 @@
             <Ro2Chk>0</Ro2Chk>
             <Ro3Chk>0</Ro3Chk>
             <Ir1Chk>1</Ir1Chk>
-            <Ir2Chk>1</Ir2Chk>
+            <Ir2Chk>0</Ir2Chk>
             <Ra1Chk>0</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
@@ -280,12 +282,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x2000</Size>
+                <Size>0x9000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x20000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -310,7 +312,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -335,7 +337,7 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x2000</Size>
+                <Size>0x9000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -365,9 +367,9 @@
             <v6LangP>3</v6LangP>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32G030xx</Define>
+              <Define>USE_HAL_DRIVER,STM32G070xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include;..\..\G0_COMMON\app_timer;..\..\G0_COMMON\cmd_consumer;..\..\G0_COMMON\gpio_input;..\..\G0_COMMON\gpio_output;..\..\G0_COMMON\ramp;..\..\G0_COMMON\TMC-API\ic\TMC2160;..\..\G0_COMMON\TMC2160A;..\..\G0_COMMON\ui;..\..\G0_COMMON\xAt24Cxx;..\..\G0_COMMON\xCRC16;..\..\G0_COMMON\xIIC_IO;..\..\G0_COMMON\xMisc;..\..\G0_COMMON\xRingBuffer;..\..\G0_COMMON\xRs485Dev;..\..\G0_COMMON\xUartDev;..\Core\Src\board;..\Core\Src\task</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -411,9 +413,9 @@
           <GroupName>Application/MDK-ARM</GroupName>
           <Files>
             <File>
-              <FileName>startup_stm32g030xx.s</FileName>
+              <FileName>startup_stm32g070xx.s</FileName>
               <FileType>2</FileType>
-              <FilePath>startup_stm32g030xx.s</FilePath>
+              <FilePath>startup_stm32g070xx.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -441,19 +443,14 @@
           <GroupName>Drivers/STM32G0xx_HAL_Driver</GroupName>
           <Files>
             <File>
-              <FileName>stm32g0xx_hal_adc.c</FileName>
+              <FileName>stm32g0xx_hal_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_adc.c</FilePath>
+              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_spi.c</FilePath>
             </File>
             <File>
-              <FileName>stm32g0xx_hal_adc_ex.c</FileName>
+              <FileName>stm32g0xx_hal_spi_ex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_adc_ex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g0xx_ll_adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_ll_adc.c</FilePath>
+              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_spi_ex.c</FilePath>
             </File>
             <File>
               <FileName>stm32g0xx_hal_rcc.c</FileName>
@@ -526,26 +523,6 @@
               <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_exti.c</FilePath>
             </File>
             <File>
-              <FileName>stm32g0xx_hal_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g0xx_hal_i2c_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_i2c_ex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g0xx_hal_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g0xx_hal_spi_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_spi_ex.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32g0xx_hal_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_tim.c</FilePath>
@@ -574,6 +551,166 @@
               <FileName>system_stm32g0xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/system_stm32g0xx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/board</GroupName>
+          <Files>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\board\board.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/task</GroupName>
+          <Files>
+            <File>
+              <FileName>led_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\task\led_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\task\task.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/app_timer</GroupName>
+          <Files>
+            <File>
+              <FileName>app_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\app_timer\app_timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/cmd_consumer</GroupName>
+          <Files>
+            <File>
+              <FileName>cmd_consumer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\cmd_consumer\cmd_consumer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/uartdev</GroupName>
+          <Files>
+            <File>
+              <FileName>uartDev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xUartDev\uartDev.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/rs485</GroupName>
+          <Files>
+            <File>
+              <FileName>rs485Dev.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xRs485Dev\rs485Dev.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/ringbuff</GroupName>
+          <Files>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xRingBuffer\ring_buffer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/ramp</GroupName>
+          <Files>
+            <File>
+              <FileName>myRamp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\ramp\myRamp.c</FilePath>
+            </File>
+            <File>
+              <FileName>rampCmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\ramp\rampCmd.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/gpio</GroupName>
+          <Files>
+            <File>
+              <FileName>input.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\gpio_input\input.c</FilePath>
+            </File>
+            <File>
+              <FileName>inputCmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\gpio_input\inputCmd.c</FilePath>
+            </File>
+            <File>
+              <FileName>output.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\gpio_output\output.c</FilePath>
+            </File>
+            <File>
+              <FileName>outputCmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\gpio_output\outputCmd.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/at24cxx</GroupName>
+          <Files>
+            <File>
+              <FileName>at24cxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xAt24Cxx\at24cxx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/iic_io</GroupName>
+          <Files>
+            <File>
+              <FileName>IIC_IO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xIIC_IO\IIC_IO.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/crc16</GroupName>
+          <Files>
+            <File>
+              <FileName>crc16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xCRC16\crc16.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/misc</GroupName>
+          <Files>
+            <File>
+              <FileName>gpioDecal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xMisc\gpioDecal.c</FilePath>
+            </File>
+            <File>
+              <FileName>misc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\xMisc\misc.c</FilePath>
             </File>
           </Files>
         </Group>

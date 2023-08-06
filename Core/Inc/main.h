@@ -73,8 +73,6 @@ void Error_Handler(void);
 #define DET_GPIO_Port GPIOA
 #define DE_Pin GPIO_PIN_1
 #define DE_GPIO_Port GPIOA
-#define TEMP_Pin GPIO_PIN_4
-#define TEMP_GPIO_Port GPIOA
 #define SPI_CS0_Pin GPIO_PIN_0
 #define SPI_CS0_GPIO_Port GPIOB
 #define SPI_CS1_Pin GPIO_PIN_1
@@ -99,6 +97,8 @@ void Error_Handler(void);
 #define REFL1_EXT7_GPIO_Port GPIOC
 #define REFR1_EXT12_Pin GPIO_PIN_12
 #define REFR1_EXT12_GPIO_Port GPIOA
+#define SWD_LED_Pin GPIO_PIN_13
+#define SWD_LED_GPIO_Port GPIOA
 #define REFL0_EXT15_Pin GPIO_PIN_15
 #define REFL0_EXT15_GPIO_Port GPIOA
 #define REFR0_EXT0_Pin GPIO_PIN_0
@@ -117,10 +117,18 @@ void Error_Handler(void);
 #define IN0_GPIO_Port GPIOB
 #define OUT3_Pin GPIO_PIN_6
 #define OUT3_GPIO_Port GPIOB
+#define SDA_Pin GPIO_PIN_7
+#define SDA_GPIO_Port GPIOB
+#define SCL_Pin GPIO_PIN_8
+#define SCL_GPIO_Port GPIOB
 #define IRQ_Pin GPIO_PIN_9
 #define IRQ_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+extern SPI_HandleTypeDef hspi1;
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim3;
+extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
