@@ -33,7 +33,7 @@ extern INPUT_DEV_T g_input;
 extern OUTPUT_DEV_T g_output;
 extern UartDev_t console;
 extern Rs485Dev_t rs485;
-extern rampDev_t stpr[2];
+extern rampDev_t stprRamp[2];
 
 #define APP_TIMER_COUNT (8)
 extern appTmrDev_t tmr[APP_TIMER_COUNT];

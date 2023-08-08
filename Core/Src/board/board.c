@@ -21,6 +21,7 @@
 #include "led_flash.h"
 #include "outputCmd.h"
 #include "inputCmd.h"
+#include "rampCmd.h"
 
 
 #define NOUSED_PIN_INDX 255
@@ -87,11 +88,6 @@ appTmrDev_t tmr[APP_TIMER_COUNT] = {0};
 // commander comsumer
 cmdConsumerDev_t cmdConsumer;
 
-
-
-TMC2160A_dev_t tmc2160a[2];
-
-
 OUTPUT_DEV_T g_output;
 const PIN_T OUTPUT_PIN[] = {
     {OUT0_GPIO_Port, OUT0_Pin},
@@ -119,7 +115,20 @@ const PIN_T M1_DIR = {M1_DIR_GPIO_Port, M1_DIR_Pin};
 const PIN_T M1_REFL = {REFL1_EXT7_GPIO_Port, REFL1_EXT7_Pin};
 const PIN_T M1_REFR = {REFR1_EXT12_GPIO_Port, REFR1_EXT12_Pin};
 
-rampDev_t stpr[2];
+rampDev_t stprRamp[2];
+
+const PIN_T DRV0_CS = {SPI_CS0_GPIO_Port, SPI_CS0_Pin};
+const PIN_T DRV0_EN = {M0_EN_GPIO_Port, M0_EN_Pin};
+const PIN_T DRV0_DIA0 = {M0_DIA0_GPIO_Port, M0_DIA0_Pin};
+const PIN_T DRV0_DIA1 = {M0_DIA1_GPIO_Port, M0_DIA1_Pin};
+
+const PIN_T DRV1_CS = {SPI_CS1_GPIO_Port, SPI_CS1_Pin};
+const PIN_T DRV1_EN = {M1_EN_GPIO_Port, M1_EN_Pin};
+const PIN_T DRV1_DIA0 = {M1_DIA0_GPIO_Port, M1_DIA0_Pin};
+const PIN_T DRV1_DIA1 = {M1_DIA1_GPIO_Port, M1_DIA1_Pin};
+
+TMC2160A_dev_t stprDrv[2];
+
 
 
 // =============================================
@@ -137,7 +146,7 @@ const PIN_T SDA = {SDA_GPIO_Port, SDA_Pin};
 
 static s8 configWrite(void);
 static s8 configRead(void);
-static u8 brdCmdU8(u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...));
+static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...));
 static void forwardToBus(u8* BUFF, u16 len);
 
 /* Private function prototypes -----------------------------------------------*/
@@ -178,10 +187,53 @@ void boardInit(void){
     InputDevSetup(&g_input, OUTPUT_PIN, 5);
     printS("ok\r\n");
     
+    TMC2160A_dev_Setup(
+        &stprDrv[0], 
+        "drv0",
+        &DRV0_CS,
+        &DRV0_EN,
+        &DRV0_DIA0,
+        &DRV0_DIA1,
+        &hspi1, 
+        0,
+        EEPROM_BASE_USER,
+        NULL,   //s8 (*ioWrite)(u16 addr, const u8 *pDat, u16 nBytes),
+        NULL    //s8 (*ioRead)(u16 addr, u8 *pDat, u16 nBytes)
+    );
+    
+    TMC2160A_dev_Setup(
+        &stprDrv[1], 
+        "drv1",
+        &DRV1_CS,
+        &DRV1_EN,
+        &DRV1_DIA0,
+        &DRV1_DIA1,
+        &hspi1, 
+        1,
+        EEPROM_BASE_USER,
+        NULL,   //s8 (*ioWrite)(u16 addr, const u8 *pDat, u16 nBytes),
+        NULL    //s8 (*ioRead)(u16 addr, u8 *pDat, u16 nBytes)
+    );
+
+    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0xec, 0x00, 0x01, 0x00, 0xc3);
+    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x90, 0x00, 0x06, 0x1f, 0x0a);
+    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x91, 0x00, 0x00, 0x00, 0x0a);
+    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x80, 0x00, 0x00, 0x00, 0x04);
+    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x93, 0x00, 0x00, 0x01, 0xf4);
+    
+    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0xec, 0x00, 0x01, 0x00, 0xc3);
+    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x90, 0x00, 0x06, 0x1f, 0x0a);
+    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x91, 0x00, 0x00, 0x00, 0x0a);
+    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x80, 0x00, 0x00, 0x00, 0x04);
+    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x93, 0x00, 0x00, 0x01, 0xf4);
+    
+    stprDrv[0].Enable(&stprDrv[0].rsrc);
+    stprDrv[1].Enable(&stprDrv[1].rsrc);
+    
     printS("setup ramp...");
     // setup ramp
     rampSetup(
-        &stpr[0],
+        &stprRamp[0],
         "m1",
         &htim3,
         TIM_CHANNEL_1,
@@ -193,7 +245,7 @@ void boardInit(void){
     
     // setup ramp
     rampSetup(
-        &stpr[1],
+        &stprRamp[1],
         "m2",
         &htim1,
         TIM_CHANNEL_4,
@@ -213,8 +265,10 @@ void boardInit(void){
         &tmr[1],
         10                     // unit in ms, polling rb each interval
     );
-    cmdConsumer.append(&cmdConsumer.rsrc, brdCmdU8);
-    cmdConsumer.append(&cmdConsumer.rsrc, outputCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, NULL, brdCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[0], rampCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[1], rampCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &g_output, outputCmdU8);
     printS("ok\r\n");
     
     // get ready, start to work
@@ -322,7 +376,7 @@ static s8 configRead(void){
     return 0;
 }
 
-static u8 brdCmdU8(u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...)){
+static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...)){
     return(brdCmd((const char*)CMDu8, xprint));
 }
 
@@ -417,7 +471,7 @@ static s8 rs485AfterSend_1(UART_HandleTypeDef *huart){
 }
 
 void tmc2160_readWriteArray(uint8_t channel, uint8_t *data, size_t len){
-    tmc2160a[channel].readWriteArray(&tmc2160a[channel].rsrc, data,len);
+    stprDrv[channel].readWriteArray(&stprDrv[channel].rsrc, data,len);
 }
 
 /**
