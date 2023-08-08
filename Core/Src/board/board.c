@@ -21,6 +21,7 @@
 #include "led_flash.h"
 #include "outputCmd.h"
 #include "inputCmd.h"
+#include "rampCmd.h"
 
 
 #define NOUSED_PIN_INDX 255
@@ -137,7 +138,7 @@ const PIN_T SDA = {SDA_GPIO_Port, SDA_Pin};
 
 static s8 configWrite(void);
 static s8 configRead(void);
-static u8 brdCmdU8(u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...));
+static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...));
 static void forwardToBus(u8* BUFF, u16 len);
 
 /* Private function prototypes -----------------------------------------------*/
@@ -213,8 +214,10 @@ void boardInit(void){
         &tmr[1],
         10                     // unit in ms, polling rb each interval
     );
-    cmdConsumer.append(&cmdConsumer.rsrc, brdCmdU8);
-    cmdConsumer.append(&cmdConsumer.rsrc, outputCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, NULL, brdCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &stpr[0], rampCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &stpr[1], rampCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &g_output, outputCmdU8);
     printS("ok\r\n");
     
     // get ready, start to work
@@ -322,7 +325,7 @@ static s8 configRead(void){
     return 0;
 }
 
-static u8 brdCmdU8(u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...)){
+static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...)){
     return(brdCmd((const char*)CMDu8, xprint));
 }
 
