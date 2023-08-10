@@ -22,7 +22,9 @@
 #include "outputCmd.h"
 #include "inputCmd.h"
 #include "rampCmd.h"
+#include "tmc2160a_cmd.h"
 
+#include "max_tester_ui.h"
 
 #define NOUSED_PIN_INDX 255
 
@@ -72,15 +74,28 @@ static u8 uartRxPool[RX_POOL_LEN] = {0};
 static u8 uartRxBuf[2*RX_BUF_LEN] = {0};
 static u8 uartTxPool[TX_POOL_LEN] = {0};
 UartDev_t console;
+
+#define UI_RX_POOL_LEN 	(256)
+#define UI_TX_POOL_LEN 	(128)
+#define UI_RX_BUFF_LEN 	(64)
+
+static u8 uiRxPool[UI_RX_POOL_LEN] = {0};
+static u8 uiRxBuf[2*UI_RX_BUFF_LEN] = {0};
+static u8 uiTxPool[UI_TX_POOL_LEN] = {0};
+static UartDev_t uiUartDev;
+
+//// rs485 device
+//const PIN_T DE = {DE_GPIO_Port, DE_Pin};
+//const PIN_T DET = {DET_GPIO_Port, DET_Pin};
+//static u8 rs485RxPool[RX_POOL_LEN] = {0};
+//static u8 rs485RxBuf[2*RX_BUF_LEN] = {0};
+//static u8 rs485TxPool[TX_POOL_LEN] = {0};
+//static s8 rs485AfterSend_1(UART_HandleTypeDef *huart);
+//static s8 rs485BeforeSend_1(void);
+//Rs485Dev_t rs485;
+
 // rs485 device
-const PIN_T DE = {DE_GPIO_Port, DE_Pin};
-const PIN_T DET = {DET_GPIO_Port, DET_Pin};
-static u8 rs485RxPool[RX_POOL_LEN] = {0};
-static u8 rs485RxBuf[2*RX_BUF_LEN] = {0};
-static u8 rs485TxPool[TX_POOL_LEN] = {0};
-static s8 rs485AfterSend_1(UART_HandleTypeDef *huart);
-static s8 rs485BeforeSend_1(void);
-Rs485Dev_t rs485;
+
 
 // app timer 
 appTmrDev_t tmr[APP_TIMER_COUNT] = {0};
@@ -129,8 +144,6 @@ const PIN_T DRV1_DIA1 = {M1_DIA1_GPIO_Port, M1_DIA1_Pin};
 
 TMC2160A_dev_t stprDrv[2];
 
-
-
 // =============================================
 AT24CXX_Dev_T erom;
 const PIN_T SCL = {SCL_GPIO_Port, SCL_Pin};
@@ -157,29 +170,27 @@ void boardPreInit(void){
 }
 
 void boardInit(void){
-    s32 i;
-
+		u8 trmIdx = 0;
     // setup app timers
-    for(i=0;i<APP_TIMER_COUNT;i++){
-        setup_appTmr(&tmr[i]);
+    for(trmIdx=0;trmIdx<APP_TIMER_COUNT;trmIdx++){
+        setup_appTmr(&tmr[trmIdx]);
     }
+		trmIdx = 0;
     
     //read board addr
-    setupUartDev(&console, &huart1, uartTxPool, RX_POOL_LEN, uartRxPool, RX_POOL_LEN, uartRxBuf, RX_BUF_LEN);
+    setupUartDev(&console, &huart1, &tmr[trmIdx++], uartTxPool, TX_POOL_LEN, uartRxPool, RX_POOL_LEN, uartRxBuf, RX_BUF_LEN, 4);
     memset(g_addrPre,0,4);
     strFormat(g_addrPre, 4, "%d.", g_boardAddr);
     print("%sabout(\"%s\")\r\n", g_addrPre, ABOUT);
 
-    printS("setup rs485...");
-    setupRs485Dev(&rs485, &huart2, rs485TxPool, RX_POOL_LEN, rs485RxPool, RX_POOL_LEN, rs485RxBuf, RX_BUF_LEN, DE, DET,
-        rs485BeforeSend_1,
-        rs485AfterSend_1
-    );
+    printS("setup lcd...");
+    setupUartDev(&uiUartDev, &huart2, &tmr[trmIdx++], uiTxPool, UI_TX_POOL_LEN, uiRxPool, UI_RX_POOL_LEN, uiRxBuf, UI_RX_BUFF_LEN, 8);
+		max_tester_ui_initial(&uiUartDev, &tmr[trmIdx++]);
     printS("ok\r\n");
-
+		
     // application initial
     printS("setup led_flash...");
-    led_flash_init(&tmr[0], &RUNNING, 100);     // now, it can run itself
+    led_flash_init(&tmr[trmIdx++], &RUNNING, 100);     // now, it can run itself
     printS("ok\r\n");
    
     printS("setup gpio driver...");
@@ -262,20 +273,29 @@ void boardInit(void){
         fetchLineFromRingBufferU8, // fetchLine method  
         print,                  // print out 
         forwardToBus,
-        &tmr[1],
+        &tmr[trmIdx++],
         10                     // unit in ms, polling rb each interval
     );
     cmdConsumer.append(&cmdConsumer.rsrc, NULL, brdCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[0], rampCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[1], rampCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &g_output, outputCmdU8);
+		cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[0], tmc2160aCmdU8);
+		cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[1], tmc2160aCmdU8);
     printS("ok\r\n");
     
     // get ready, start to work
     console.StartRcv(&console.rsrc);
-    rs485.rsrc.uartdev.StartRcv(&rs485.rsrc.uartdev.rsrc);
-    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
-  
+		uiUartDev.StartRcv(&uiUartDev.rsrc);
+		
+//    rs485.rsrc.uartdev.StartRcv(&rs485.rsrc.uartdev.rsrc);
+//    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
+
+
+
+		textbox_t* txb = ui.GetTxtBx(&ui.rsrc, "pg00", "t_title");
+		txb->set(&txb->rsrc, "txt", han);
+	
     g_initalDone = 1;
     printS("initial complete, type \"help\" for help\n");      
 }
@@ -297,19 +317,19 @@ void print(const char* FORMAT_ORG, ...){
 }
 
 void printS485(const char* STRING){
-    rs485.Send(&rs485.rsrc, (const u8*)STRING, strlen(STRING));
+//    rs485.Send(&rs485.rsrc, (const u8*)STRING, strlen(STRING));
 }
 
 void print485(const char* FORMAT_ORG, ...){
-    va_list ap;
-    char buf[MAX_CMD_LEN] = {0};
-    s16 bytes;
-    //take string
-    va_start(ap, FORMAT_ORG);
-    bytes = vsnprintf(buf, MAX_CMD_LEN, FORMAT_ORG, ap);
-    va_end(ap);
-    //send out
-    if(bytes>0)    rs485.Send(&rs485.rsrc, (u8*)buf, bytes);
+//    va_list ap;
+//    char buf[MAX_CMD_LEN] = {0};
+//    s16 bytes;
+//    //take string
+//    va_start(ap, FORMAT_ORG);
+//    bytes = vsnprintf(buf, MAX_CMD_LEN, FORMAT_ORG, ap);
+//    va_end(ap);
+//    //send out
+//    if(bytes>0)    rs485.Send(&rs485.rsrc, (u8*)buf, bytes);
 }
 
 void printSUDP(const char* STRING){
@@ -442,33 +462,33 @@ u8 brdCmd(const char* CMD, void (*xprint)(const char* FORMAT_ORG, ...)){
     return 0;
 }
 
-static s8 rs485BeforeSend_1(void){
-    if(g_initalDone == 0)    return 0;
-    if(HAL_GPIO_ReadPin(rs485.rsrc.DET.GPIOx, rs485.rsrc.DET.GPIO_Pin)==GPIO_PIN_SET){
-        return -1;
-    }
-    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_SET);
-    while(1){
-        if(HAL_GPIO_ReadPin(rs485.rsrc.DET.GPIOx, rs485.rsrc.DET.GPIO_Pin)==GPIO_PIN_SET){
-            break;
-        }
-    }
-    return 0;
-}
-
-static s8 rs485AfterSend_1(UART_HandleTypeDef *huart){
-    if(g_initalDone == 0)    return 0;
-    if(huart->Instance == rs485.rsrc.uartdev.rsrc.huart->Instance){
-        HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
-        rs485.rsrc.uartdev.rsrc.flag |= BIT(0);
-//        while(1){
-//            if(HAL_GPIO_ReadPin(rs485.rsrc.DET.GPIOx, rs485.rsrc.DET.GPIO_Pin)==GPIO_PIN_RESET){
-//                break;
-//            }
+//static s8 rs485BeforeSend_1(void){
+//    if(g_initalDone == 0)    return 0;
+//    if(HAL_GPIO_ReadPin(rs485.rsrc.DET.GPIOx, rs485.rsrc.DET.GPIO_Pin)==GPIO_PIN_SET){
+//        return -1;
+//    }
+//    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_SET);
+//    while(1){
+//        if(HAL_GPIO_ReadPin(rs485.rsrc.DET.GPIOx, rs485.rsrc.DET.GPIO_Pin)==GPIO_PIN_SET){
+//            break;
 //        }
-    }
-    return 0;
-}
+//    }
+//    return 0;
+//}
+
+//static s8 rs485AfterSend_1(UART_HandleTypeDef *huart){
+//    if(g_initalDone == 0)    return 0;
+//    if(huart->Instance == rs485.rsrc.uartdev.rsrc.huart->Instance){
+//        HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
+//        rs485.rsrc.uartdev.rsrc.flag |= BIT(0);
+////        while(1){
+////            if(HAL_GPIO_ReadPin(rs485.rsrc.DET.GPIOx, rs485.rsrc.DET.GPIO_Pin)==GPIO_PIN_RESET){
+////                break;
+////            }
+////        }
+//    }
+//    return 0;
+//}
 
 void tmc2160_readWriteArray(uint8_t channel, uint8_t *data, size_t len){
     stprDrv[channel].readWriteArray(&stprDrv[channel].rsrc, data,len);
@@ -494,7 +514,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
     if(g_initalDone==0)    return;
-    rs485.rsrc.uartdev.rsrc.afterSend(huart);
+//    rs485.rsrc.uartdev.rsrc.afterSend(huart);
     if(huart->Instance == console.rsrc.huart->Instance){
         console.rsrc.flag |= BIT(0);
     }

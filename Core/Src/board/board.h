@@ -7,7 +7,7 @@ filename: board.h
 #define __BOARD_H__
 
 #include "misc.h"
-#include "rs485Dev.h"
+//#include "rs485Dev.h"
 #include "uartdev.h"
 #include "app_timer.h"
 #include "cmd_consumer.h"
@@ -32,7 +32,7 @@ extern u8 g_initalDone;
 extern INPUT_DEV_T g_input;
 extern OUTPUT_DEV_T g_output;
 extern UartDev_t console;
-extern Rs485Dev_t rs485;
+//extern Rs485Dev_t rs485;
 extern rampDev_t stprRamp[2];
 
 #define APP_TIMER_COUNT (8)

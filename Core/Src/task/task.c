@@ -53,7 +53,7 @@ void taskPolling(void){
     
     // poll to send out 
     console.TxPolling(&console.rsrc);
-    rs485.TxPolling(&rs485.rsrc);
+//		uiUartDev.TxPolling(&uiUartDev.rsrc);
     
     u8 i;
     for(i=0;i<APP_TIMER_COUNT;i++){
@@ -62,7 +62,8 @@ void taskPolling(void){
 
     if(task_tick >= 4){
         console.RxPolling(&console.rsrc);
-        rs485.RxPolling(&rs485.rsrc);    
+//				uiUartDev.RxPolling(&uiUartDev.rsrc);
+//				ui.Polling(&ui.rsrc, 4);
         task_tick = 0;
     }
 }
