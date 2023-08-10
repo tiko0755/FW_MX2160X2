@@ -226,21 +226,6 @@ void boardInit(void){
         NULL    //s8 (*ioRead)(u16 addr, u8 *pDat, u16 nBytes)
     );
 
-    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0xec, 0x00, 0x01, 0x00, 0xc3);
-    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x90, 0x00, 0x06, 0x1f, 0x0a);
-    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x91, 0x00, 0x00, 0x00, 0x0a);
-    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x80, 0x00, 0x00, 0x00, 0x04);
-    tmc2160_writeDatagram(&stprDrv[0].rsrc.obj, 0x93, 0x00, 0x00, 0x01, 0xf4);
-    
-    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0xec, 0x00, 0x01, 0x00, 0xc3);
-    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x90, 0x00, 0x06, 0x1f, 0x0a);
-    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x91, 0x00, 0x00, 0x00, 0x0a);
-    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x80, 0x00, 0x00, 0x00, 0x04);
-    tmc2160_writeDatagram(&stprDrv[1].rsrc.obj, 0x93, 0x00, 0x00, 0x01, 0xf4);
-    
-    stprDrv[0].Enable(&stprDrv[0].rsrc);
-    stprDrv[1].Enable(&stprDrv[1].rsrc);
-    
     printS("setup ramp...");
     // setup ramp
     rampSetup(
@@ -253,6 +238,8 @@ void boardInit(void){
         &M0_REFR,
         64
     );
+    
+    HAL_GPIO_WritePin(M0_DIR.GPIOx, M0_DIR.GPIO_Pin, GPIO_PIN_SET);
     
     // setup ramp
     rampSetup(
@@ -291,11 +278,6 @@ void boardInit(void){
 //    rs485.rsrc.uartdev.StartRcv(&rs485.rsrc.uartdev.rsrc);
 //    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
 
-
-
-		textbox_t* txb = ui.GetTxtBx(&ui.rsrc, "pg00", "t_title");
-		txb->set(&txb->rsrc, "txt", han);
-	
     g_initalDone = 1;
     printS("initial complete, type \"help\" for help\n");      
 }

@@ -17,10 +17,10 @@ filename: max_tester_ui.c
 **********************************************************/
 
 
-static uiPage_t pg00;
-static uiPage_t pg10;
-static uiPage_t pg20;
-static uiPage_t pgxx;
+//static uiPage_t pg00;
+//static uiPage_t pg10;
+//static uiPage_t pg20;
+//static uiPage_t pgxx;
 
 
 uiDev_T ui;
