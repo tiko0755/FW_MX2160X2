@@ -266,13 +266,8 @@ void boardInit(void){
         10                     // unit in ms, polling rb each interval
     );
     cmdConsumer.append(&cmdConsumer.rsrc, NULL, brdCmdU8);
-<<<<<<< HEAD
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[0], rampCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[1], rampCmdU8);
-=======
-    cmdConsumer.append(&cmdConsumer.rsrc, &stpr[0], rampCmdU8);
-    cmdConsumer.append(&cmdConsumer.rsrc, &stpr[1], rampCmdU8);
->>>>>>> 596f53320b10e7a912cc78f50df749805a0e1750
     cmdConsumer.append(&cmdConsumer.rsrc, &g_output, outputCmdU8);
     printS("ok\r\n");
     
