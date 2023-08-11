@@ -44,7 +44,6 @@ extern const PIN_T LAN_CS;
 extern const PIN_T LAN_IRQ;
 extern const PIN_T RUNNING;
 
-
 // gloable method
 void boardPreInit(void);
 void boardInit(void);

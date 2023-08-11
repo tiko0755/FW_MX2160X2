@@ -185,7 +185,7 @@ void boardInit(void){
 
     printS("setup lcd...");
     setupUartDev(&uiUartDev, &huart2, &tmr[trmIdx++], uiTxPool, UI_TX_POOL_LEN, uiRxPool, UI_RX_POOL_LEN, uiRxBuf, UI_RX_BUFF_LEN, 8);
-		max_tester_ui_initial(&uiUartDev, &tmr[trmIdx++]);
+    max_tester_ui_initial(&uiUartDev, &tmr[trmIdx++]);
     printS("ok\r\n");
 		
     // application initial
@@ -267,18 +267,18 @@ void boardInit(void){
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[0], rampCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[1], rampCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &g_output, outputCmdU8);
-		cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[0], tmc2160aCmdU8);
-		cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[1], tmc2160aCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[0], tmc2160aCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[1], tmc2160aCmdU8);
     printS("ok\r\n");
     
     // get ready, start to work
     console.StartRcv(&console.rsrc);
-		uiUartDev.StartRcv(&uiUartDev.rsrc);
 		
 //    rs485.rsrc.uartdev.StartRcv(&rs485.rsrc.uartdev.rsrc);
 //    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
 
     g_initalDone = 1;
+    print("%d timers have been used\r\n", trmIdx);
     printS("initial complete, type \"help\" for help\n");      
 }
 
