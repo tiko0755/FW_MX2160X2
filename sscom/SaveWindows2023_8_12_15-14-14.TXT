@@ -1,0 +1,187 @@
+
+[14:26:45.150]发→◇drv0.regread 0x00
+□
+[14:26:45.187]收←◆<tmc2160_ReadWriteArray data:0x00 00000000>
+<tmc2160_ReadWriteArray rx:0xf100000000>
+<tmc2160_ReadWriteArray data:0x00 00000000>
+<tmc2160_ReadWriteArray rx:0xf100000009>
++ok@0.drv0.regread(0x00,0xf1,0x00000009)
+
+[14:26:54.287]发→◇drv0.regread 0x01
+□
+[14:26:54.325]收←◆<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000009>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regread(0x01,0xb1,0x00000005)
+
+[14:26:58.270]发→◇drv0.regread 0x01
+□
+[14:26:58.276]收←◆<tmc2160_ReadWriteArray data:0x01 0000
+[14:26:58.303]收←◆0000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regread(0x01,0xb1,0x00000005)
+
+[14:26:59.174]发→◇drv0.regread 0x01
+□
+[14:26:59.215]收←◆<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regread(0x01,0xb1,0x00000005)
+
+[14:27:59.478]发→◇drv0.regwrite 0x01 0xff
+□
+[14:27:59.488]收←◆<tmc2160_ReadWriteArray data:0x81 000000ff>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regwrite(0x01,0xb1,0x00000005)
+
+[14:28:01.215]发→◇drv0.regread 0x01
+□
+[14:28:01.257]收←◆<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb1000000ff>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x01,0xb0,0x00000000)
+
+[14:28:02.191]发→◇drv0.regread 0x01
+□
+[14:28:02.226]收←◆<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x01,0xb0,0x00000000)
+
+[14:47:50.780]发→◇drv0.regread 0x04
+□
+[14:47:50.823]收←◆<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb030000042>
++ok@0.drv0.regread(0x04,0xb0,0x30000042)
+
+[14:47:51.836]发→◇drv0.regread 0x04
+□
+[14:47:51.873]收←◆<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb030000042>
+<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb030000042>
++ok@0.drv0.regread(0x04,0xb0,0x30000042)
+
+[14:48:36.596]发→◇drv0.regread 0x08
+□
+[14:48:36.634]收←◆<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf030000043>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
++ok@0.drv0.regread(0x08,0xf0,0x0000000e)
+
+[14:48:50.684]发→◇drv0.regwrite 0x08 0x0a
+□
+[14:48:50.716]收←◆<tmc2160_ReadWriteArray data:0x88 0000000a>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
++ok@0.drv0.regwrite(0x08,0xf0,0x0000000e)
+
+[14:48:52.540]发→◇drv0.regread 0x08
+□
+[14:48:52.581]收←◆<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000a>
++ok@0.drv0.regread(0x08,0xf0,0x0000000a)
+
+[14:48:53.476]发→◇drv0.regread 0x08
+□
+[14:48:53.493]收←◆<tmc2160_ReadWriteArray data:0x08 00000000>
+
+[14:48:53.519]收←◆<tmc2160_ReadWriteArray rx:0xf00000000a>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
++ok@0.drv0.regread(0x08,0xb0,0x0000000a)
+
+[14:48:54.157]发→◇drv0.regread 0x08
+□
+[14:48:54.201]收←◆<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000a>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
++ok@0.drv0.regread(0x08,0xb0,0x0000000a)
+
+[14:48:57.141]发→◇drv0.regwrite 0x08 0x0e
+□
+[14:48:57.175]收←◆<tmc2160_ReadWriteArray data:0x88 0000000e>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
++ok@0.drv0.regwrite(0x08,0xb0,0x0000000a)
+
+[14:48:57.844]发→◇drv0.regread 0x08
+□
+[14:48:57.880]收←◆<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000e>
++ok@0.drv0.regread(0x08,0xb0,0x0000000e)
+
+[14:48:58.669]发→◇drv0.regread 0x08
+□
+[14:48:58.680]收←◆<tmc2160_ReadWriteA
+[14:48:58.712]收←◆rray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000e>
++ok@0.drv0.regread(0x08,0xb0,0x0000000e)
+
+[14:48:58.956]发→◇drv0.regread 0x08
+□
+[14:48:59.000]收←◆<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000e>
++ok@0.drv0.regread(0x08,0xb0,0x0000000e)
+
+[15:05:08.155]发→◇drv0.regwrite 0x10 0x0555
+□
+[15:05:08.169]收←◆<tmc2160_ReadWriteArray data:0x90 0000055
+[15:05:08.190]收←◆5>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
++ok@0.drv0.regwrite(0x10,0xf0,0x0000000e)
+
+[15:05:42.707]发→◇drv0.regwrite 0x11 0x0a
+□
+[15:05:42.744]收←◆<tmc2160_ReadWriteArray data:0x91 0000000a>
+<tmc2160_ReadWriteArray rx:0xb000000555>
++ok@0.drv0.regwrite(0x11,0xb0,0x00000555)
+
+[15:06:35.939]发→◇drv0.regread 0x12
+□
+[15:06:35.946]收←◆<tmc2160_ReadWriteArray data:0x12 0
+[15:06:35.972]收←◆0000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
+<tmc2160_ReadWriteArray data:0x12 00000000>
+<tmc2160_ReadWriteArray rx:0xf000000470>
++ok@0.drv0.regread(0x12,0xf0,0x00000470)
+
+[15:09:52.011]发→◇drv0.regread 0x2d
+□
+[15:09:52.019]收←◆<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000470>
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x2d,0xb0,0x00000000)
+
+[15:09:53.275]发→◇drv0.regread 0x2d
+□
+[15:09:53.318]收←◆<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x2d,0xb0,0x00000000)
+
+[15:09:53.850]发→◇drv0.regread 0x2d
+□
+[15:09:53.888]收←◆<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x2d,0xb0,0x00000000)

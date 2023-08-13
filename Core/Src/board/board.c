@@ -485,6 +485,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
     
 }
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+    if(g_initalDone == 0){  return; }
+//	if(htim->Instance == htim1.Instance){
+//        stprRamp[1].isr(&stprRamp[1].rsrc, &htim1);
+//	}
+//    else if(htim->Instance == htim3.Instance){
+//        stprRamp[0].isr(&stprRamp[0].rsrc, &htim3);
+//    }
+}
+
+
+
 /**
   * @brief  Conversion complete callback in non blocking mode
   * @param  AdcHandle : ADC handle

@@ -1,0 +1,110 @@
+<tmc2160_ReadWriteArray data:0x00 00000000>
+<tmc2160_ReadWriteArray rx:0xf100000000>
+<tmc2160_ReadWriteArray data:0x00 00000000>
+<tmc2160_ReadWriteArray rx:0xf100000009>
++ok@0.drv0.regread(0x00,0xf1,0x00000009)
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000009>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regread(0x01,0xb1,0x00000005)
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regread(0x01,0xb1,0x00000005)
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regread(0x01,0xb1,0x00000005)
+<tmc2160_ReadWriteArray data:0x81 000000ff>
+<tmc2160_ReadWriteArray rx:0xb100000005>
++ok@0.drv0.regwrite(0x01,0xb1,0x00000005)
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb1000000ff>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x01,0xb0,0x00000000)
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x01 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x01,0xb0,0x00000000)
+<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb030000042>
++ok@0.drv0.regread(0x04,0xb0,0x30000042)
+<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb030000042>
+<tmc2160_ReadWriteArray data:0x04 00000000>
+<tmc2160_ReadWriteArray rx:0xb030000042>
++ok@0.drv0.regread(0x04,0xb0,0x30000042)
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf030000043>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
++ok@0.drv0.regread(0x08,0xf0,0x0000000e)
+<tmc2160_ReadWriteArray data:0x88 0000000a>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
++ok@0.drv0.regwrite(0x08,0xf0,0x0000000e)
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000a>
++ok@0.drv0.regread(0x08,0xf0,0x0000000a)
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000a>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
++ok@0.drv0.regread(0x08,0xb0,0x0000000a)
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000a>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
++ok@0.drv0.regread(0x08,0xb0,0x0000000a)
+<tmc2160_ReadWriteArray data:0x88 0000000e>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
++ok@0.drv0.regwrite(0x08,0xb0,0x0000000a)
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000e>
++ok@0.drv0.regread(0x08,0xb0,0x0000000e)
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000e>
++ok@0.drv0.regread(0x08,0xb0,0x0000000e)
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
+<tmc2160_ReadWriteArray data:0x08 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000e>
++ok@0.drv0.regread(0x08,0xb0,0x0000000e)
+<tmc2160_ReadWriteArray data:0x90 00000555>
+<tmc2160_ReadWriteArray rx:0xf00000000e>
++ok@0.drv0.regwrite(0x10,0xf0,0x0000000e)
+<tmc2160_ReadWriteArray data:0x91 0000000a>
+<tmc2160_ReadWriteArray rx:0xb000000555>
++ok@0.drv0.regwrite(0x11,0xb0,0x00000555)
+<tmc2160_ReadWriteArray data:0x12 00000000>
+<tmc2160_ReadWriteArray rx:0xb00000000a>
+<tmc2160_ReadWriteArray data:0x12 00000000>
+<tmc2160_ReadWriteArray rx:0xf000000470>
++ok@0.drv0.regread(0x12,0xf0,0x00000470)
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000470>
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x2d,0xb0,0x00000000)
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x2d,0xb0,0x00000000)
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
+<tmc2160_ReadWriteArray data:0x2d 00000000>
+<tmc2160_ReadWriteArray rx:0xb000000000>
++ok@0.drv0.regread(0x2d,0xb0,0x00000000)

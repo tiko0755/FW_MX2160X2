@@ -156,9 +156,6 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void)
   /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_BRK_UP_TRG_COM_IRQn 1 */
-  if(g_initalDone){
-	  if(stprRamp[1].isr)	stprRamp[1].isr(&stprRamp[1].rsrc, &htim1);
-  }
   /* USER CODE END TIM1_BRK_UP_TRG_COM_IRQn 1 */
 }
 
@@ -172,9 +169,9 @@ void TIM3_IRQHandler(void)
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
-  if(g_initalDone){
-	  if(stprRamp[0].isr)	stprRamp[0].isr(&stprRamp[0].rsrc, &htim3);
-  }
+  if(g_initalDone == 0){    return; }
+    stprRamp[0].isr(&stprRamp[0].rsrc, &htim3);
+  
   /* USER CODE END TIM3_IRQn 1 */
 }
 
