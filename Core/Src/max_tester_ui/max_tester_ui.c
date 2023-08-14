@@ -36,7 +36,7 @@ appTmrDev_t* maxTest_tmr;
 static void print_lcd(const char* FORMAT_ORG, ...);
 static void maxTest_pg00_updateLine(u8 lineIndx, const char* DESC, const char* LOWER, const char* UPPER, const char* UNIT, const char* RSLT, const char* TIM, const char* BG_COLOR);
 static void maxTest_pg00_updateLineX(u8 lineIndx, const char* RSLT, const char* TIM, const char* BG_COLOR);
-static void maxTest_initPg00();
+static void maxTest_initPg00(void);
 
 static u16 maxTest_squ = 0;
 static u16 maxTest_tick = 0;
@@ -54,7 +54,7 @@ void  max_tester_ui_initial(
     UartDev_t* uartDev,
     appTmrDev_t* tObj
 ){
-    s32 i,bytes;
+    s32 i;
     char buff[16];
     
     uiSetup(&ui, uartDev, print_lcd);
@@ -66,41 +66,41 @@ void  max_tester_ui_initial(
     ui.NewPage(&ui.rsrc, "pg20");
     ui.NewPage(&ui.rsrc, "pgxx");
 
-    ui.PlaceTxtBx(&ui.rsrc, "pgxx", "t_about");
+    ui.PlaceTxtBx(&ui.rsrc, "pgxx", "t_about", 0);
 
     // setup pg00
-    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_title");    // project's name
-    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_total");    // total test counter
-    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_fail");    // fail counter
-    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_percent");    // pass rate in percent
-    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_run");        // run time in second
+    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_title", 48);    // project's name
+    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_total", 8);    // total test counter
+    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_fail", 8);    // fail counter
+    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_percent", 8);    // pass rate in percent
+    ui.PlaceTxtBx(&ui.rsrc, "pg00", "t_run", 8);        // run time in second
     
     // create test itmes table lines 
     for(i=1;i<=ITEM_LINES;i++){
         // test item line's description
         memset(buff,0,16);
         sprintf(buff, "t%d_desc", i);
-        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff);
+        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff, 0);
         // test item line's lower
         memset(buff,0,16);
         sprintf(buff, "t%d_lower", i);
-        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff);
+        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff, 0);
         // test item line's upper
         memset(buff,0,16);
         sprintf(buff, "t%d_upper", i);
-        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff);
+        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff, 0);
         // test item line's unit
         memset(buff,0,16);
         sprintf(buff, "t%d_unit", i);
-        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff);
+        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff, 0);
         // test item line's result
         memset(buff,0,16);
         sprintf(buff, "t%d_rslt", i);
-        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff);
+        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff, 0);
         // test item line's time
         memset(buff,0,16);
         sprintf(buff, "t%d_tim", i);
-        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff);
+        ui.PlaceTxtBx(&ui.rsrc, "pg00", buff, 0);
     }
     
     maxTest_squ = 0;
@@ -132,7 +132,7 @@ static void maxTest_task(void* e){
     }
 }
 
-static void maxTest_initPg00(){
+static void maxTest_initPg00(void){
     // inital pg00
     ui.Set(&ui.rsrc, "pg00", "t_title", "txt", "USIXXX PCBA TESTER");
     ui.Set(&ui.rsrc, "pg00", "t_total", "txt", "9999");
@@ -154,7 +154,6 @@ static void maxTest_initPg00(){
 }
 
 static void maxTest_pg00_updateLine(u8 lineIndx, const char* DESC, const char* LOWER, const char* UPPER, const char* UNIT, const char* RSLT, const char* TIM, const char* BG_COLOR){
-    s32 i,bytes;
     char objName[16];
     if(lineIndx > ITEM_LINES){    return;   } 
     // description
@@ -196,7 +195,6 @@ static void maxTest_pg00_updateLine(u8 lineIndx, const char* DESC, const char* L
 }
 
 static void maxTest_pg00_updateLineX(u8 lineIndx, const char* RSLT, const char* TIM, const char* BG_COLOR){
-    s32 i,bytes;
     char objName[16];
     if(lineIndx >= ITEM_LINES){    return;   } 
     // description

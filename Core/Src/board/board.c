@@ -25,6 +25,8 @@
 #include "tmc2160a_cmd.h"
 
 #include "max_tester_ui.h"
+#include "user_log.h"
+
 
 #define NOUSED_PIN_INDX 255
 
@@ -181,6 +183,9 @@ void boardInit(void){
     setupUartDev(&console, &huart1, &tmr[trmIdx++], uartTxPool, TX_POOL_LEN, uartRxPool, RX_POOL_LEN, uartRxBuf, RX_BUF_LEN, 4);
     memset(g_addrPre,0,4);
     strFormat(g_addrPre, 4, "%d.", g_boardAddr);
+    
+    logInitial(printS);
+    
     print("%sabout(\"%s\")\r\n", g_addrPre, ABOUT);
 
     printS("setup lcd...");
