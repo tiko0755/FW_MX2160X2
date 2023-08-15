@@ -69,6 +69,7 @@ void Error_Handler(void);
 #define DE_GPIO_Port GPIOA
 #define REFR1_EXT4_Pin GPIO_PIN_4
 #define REFR1_EXT4_GPIO_Port GPIOA
+#define REFR1_EXT4_EXTI_IRQn EXTI4_15_IRQn
 #define SPI_CS0_Pin GPIO_PIN_0
 #define SPI_CS0_GPIO_Port GPIOB
 #define SPI_CS1_Pin GPIO_PIN_1
@@ -91,6 +92,7 @@ void Error_Handler(void);
 #define M1_DIR_GPIO_Port GPIOA
 #define REFL1_EXT7_Pin GPIO_PIN_7
 #define REFL1_EXT7_GPIO_Port GPIOC
+#define REFL1_EXT7_EXTI_IRQn EXTI4_15_IRQn
 #define SWD_LED_Pin GPIO_PIN_13
 #define SWD_LED_GPIO_Port GPIOA
 #define SWC_BOOT_FX_Pin GPIO_PIN_14
@@ -113,12 +115,14 @@ void Error_Handler(void);
 #define IN0_GPIO_Port GPIOB
 #define REFR2_EXT6_Pin GPIO_PIN_6
 #define REFR2_EXT6_GPIO_Port GPIOB
+#define REFR2_EXT6_EXTI_IRQn EXTI4_15_IRQn
 #define IN3_Pin GPIO_PIN_7
 #define IN3_GPIO_Port GPIOB
 #define T16CH1_IN1_Pin GPIO_PIN_8
 #define T16CH1_IN1_GPIO_Port GPIOB
 #define REFL2_EXT9_Pin GPIO_PIN_9
 #define REFL2_EXT9_GPIO_Port GPIOB
+#define REFL2_EXT9_EXTI_IRQn EXTI4_15_IRQn
 /* USER CODE BEGIN Private defines */
 extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim1;

@@ -184,6 +184,7 @@ void boardInit(void){
     strFormat(g_addrPre, 4, "%d.", g_boardAddr);
     
     logInitial(printS);
+    log("logger is running");
     
     print("%sabout(\"%s\")\r\n", g_addrPre, ABOUT);
 
@@ -240,7 +241,8 @@ void boardInit(void){
         &M0_DIR,
         &M0_REFL,
         &M0_REFR,
-        64
+        64, 
+        &tmr[trmIdx++]
     );
         
     // setup ramp
@@ -252,7 +254,8 @@ void boardInit(void){
         &M1_DIR,
         &M1_REFL,
         &M1_REFR,
-        64
+        64,
+        &tmr[trmIdx++]
     );
     printS("ok\r\n");
     
@@ -282,7 +285,7 @@ void boardInit(void){
 
     g_initalDone = 1;
     print("%d timers have been used\r\n", trmIdx);
-    printS("initial complete, type \"help\" for help\n");      
+    printS("initial complete, type \"help\" for help\n");  
 }
 
 void printS(const char* STRING){
@@ -490,7 +493,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 
 void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin){
 	if(g_initalDone == 0)	return;
-	//print("falling\n");
+    log("<%s >", __func__);
 	stprRamp[0].isrReleasedRefL(&stprRamp[0].rsrc, GPIO_Pin);
 	stprRamp[0].isrReleasedRefR(&stprRamp[0].rsrc, GPIO_Pin);
 	stprRamp[1].isrReleasedRefL(&stprRamp[1].rsrc, GPIO_Pin);
@@ -499,7 +502,7 @@ void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin){
 
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin){
 	if(g_initalDone == 0)	return;
-	//print("Rising\n");
+    log("<%s >", __func__);
 	stprRamp[0].isrShelteredRefL(&stprRamp[0].rsrc, GPIO_Pin);
 	stprRamp[0].isrShelteredRefR(&stprRamp[0].rsrc, GPIO_Pin);
 	stprRamp[1].isrShelteredRefL(&stprRamp[1].rsrc, GPIO_Pin);
