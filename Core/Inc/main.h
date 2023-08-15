@@ -59,12 +59,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define OUT2_Pin GPIO_PIN_13
-#define OUT2_GPIO_Port GPIOC
-#define OUT1_Pin GPIO_PIN_14
-#define OUT1_GPIO_Port GPIOC
-#define OUT0_Pin GPIO_PIN_15
-#define OUT0_GPIO_Port GPIOC
 #define LED0_Pin GPIO_PIN_0
 #define LED0_GPIO_Port GPIOF
 #define LED1_Pin GPIO_PIN_1
@@ -73,6 +67,8 @@ void Error_Handler(void);
 #define DET_GPIO_Port GPIOA
 #define DE_Pin GPIO_PIN_1
 #define DE_GPIO_Port GPIOA
+#define REFR1_EXT4_Pin GPIO_PIN_4
+#define REFR1_EXT4_GPIO_Port GPIOA
 #define SPI_CS0_Pin GPIO_PIN_0
 #define SPI_CS0_GPIO_Port GPIOB
 #define SPI_CS1_Pin GPIO_PIN_1
@@ -95,38 +91,39 @@ void Error_Handler(void);
 #define M1_DIR_GPIO_Port GPIOA
 #define REFL1_EXT7_Pin GPIO_PIN_7
 #define REFL1_EXT7_GPIO_Port GPIOC
-#define REFR1_EXT12_Pin GPIO_PIN_12
-#define REFR1_EXT12_GPIO_Port GPIOA
 #define SWD_LED_Pin GPIO_PIN_13
 #define SWD_LED_GPIO_Port GPIOA
-#define REFL0_EXT15_Pin GPIO_PIN_15
-#define REFL0_EXT15_GPIO_Port GPIOA
-#define REFR0_EXT0_Pin GPIO_PIN_0
-#define REFR0_EXT0_GPIO_Port GPIOD
-#define IN5_Pin GPIO_PIN_1
-#define IN5_GPIO_Port GPIOD
-#define IN4_Pin GPIO_PIN_2
-#define IN4_GPIO_Port GPIOD
-#define IN3_Pin GPIO_PIN_3
-#define IN3_GPIO_Port GPIOD
-#define IN2_Pin GPIO_PIN_3
+#define SWC_BOOT_FX_Pin GPIO_PIN_14
+#define SWC_BOOT_FX_GPIO_Port GPIOA
+#define SCL_Pin GPIO_PIN_15
+#define SCL_GPIO_Port GPIOA
+#define SDA_Pin GPIO_PIN_0
+#define SDA_GPIO_Port GPIOD
+#define OUT3_Pin GPIO_PIN_1
+#define OUT3_GPIO_Port GPIOD
+#define OUT2_Pin GPIO_PIN_2
+#define OUT2_GPIO_Port GPIOD
+#define OUT1_Pin GPIO_PIN_3
+#define OUT1_GPIO_Port GPIOD
+#define OUT0_Pin GPIO_PIN_3
+#define OUT0_GPIO_Port GPIOB
+#define IN2_Pin GPIO_PIN_4
 #define IN2_GPIO_Port GPIOB
-#define IN1_Pin GPIO_PIN_4
-#define IN1_GPIO_Port GPIOB
 #define IN0_Pin GPIO_PIN_5
 #define IN0_GPIO_Port GPIOB
-#define OUT3_Pin GPIO_PIN_6
-#define OUT3_GPIO_Port GPIOB
-#define SDA_Pin GPIO_PIN_7
-#define SDA_GPIO_Port GPIOB
-#define SCL_Pin GPIO_PIN_8
-#define SCL_GPIO_Port GPIOB
-#define IRQ_Pin GPIO_PIN_9
-#define IRQ_GPIO_Port GPIOB
+#define REFR2_EXT6_Pin GPIO_PIN_6
+#define REFR2_EXT6_GPIO_Port GPIOB
+#define IN3_Pin GPIO_PIN_7
+#define IN3_GPIO_Port GPIOB
+#define T16CH1_IN1_Pin GPIO_PIN_8
+#define T16CH1_IN1_GPIO_Port GPIOB
+#define REFL2_EXT9_Pin GPIO_PIN_9
+#define REFL2_EXT9_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim16;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 /* USER CODE END Private defines */

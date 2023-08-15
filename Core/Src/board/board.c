@@ -59,6 +59,7 @@ u8 g_initalDone = 0;
 u8 g_baudHost = 4;    //BAUD[4]=115200
 u8 g_baud485 = 4;
 u32 g_errorCode;// = 0;
+u32 g_tCounter = 0;
 /**********************************************
 *  PINs Define
 **********************************************/
@@ -116,21 +117,19 @@ const PIN_T OUTPUT_PIN[] = {
 INPUT_DEV_T g_input;
 const PIN_T INPUT_PIN[] = {
     {IN0_GPIO_Port, IN0_Pin},
-    {IN1_GPIO_Port, IN1_Pin},
     {IN2_GPIO_Port, IN2_Pin},
     {IN3_GPIO_Port, IN3_Pin},
-    {IN4_GPIO_Port, IN4_Pin}
 };
 
 
 // stepper
 const PIN_T M0_DIR = {M0_DIR_GPIO_Port, M0_DIR_Pin};
-const PIN_T M0_REFL = {REFL0_EXT15_GPIO_Port, REFL0_EXT15_Pin};
-const PIN_T M0_REFR = {REFR0_EXT0_GPIO_Port, REFR0_EXT0_Pin};
+const PIN_T M0_REFL = {REFL1_EXT7_GPIO_Port, REFL1_EXT7_Pin};
+const PIN_T M0_REFR = {REFR1_EXT4_GPIO_Port, REFR1_EXT4_Pin};
 
 const PIN_T M1_DIR = {M1_DIR_GPIO_Port, M1_DIR_Pin};
-const PIN_T M1_REFL = {REFL1_EXT7_GPIO_Port, REFL1_EXT7_Pin};
-const PIN_T M1_REFR = {REFR1_EXT12_GPIO_Port, REFR1_EXT12_Pin};
+const PIN_T M1_REFL = {REFL2_EXT9_GPIO_Port, REFL2_EXT9_Pin};
+const PIN_T M1_REFR = {REFR2_EXT6_GPIO_Port, REFR2_EXT6_Pin};
 
 rampDev_t stprRamp[2];
 
@@ -167,17 +166,17 @@ static void forwardToBus(u8* BUFF, u16 len);
 /* Private function prototypes -----------------------------------------------*/
 // after GPIO initial, excute this function to enable
 void boardPreInit(void){
-    AT24CXX_Setup(&erom, SCL, SDA, AT24C64, 0X00);
-    configRead();
+//    AT24CXX_Setup(&erom, &SCL, &SDA, AT24C64, 0X00);
+//    configRead();
 }
 
 void boardInit(void){
-		u8 trmIdx = 0;
+    u8 trmIdx = 0;
     // setup app timers
     for(trmIdx=0;trmIdx<APP_TIMER_COUNT;trmIdx++){
         setup_appTmr(&tmr[trmIdx]);
     }
-		trmIdx = 0;
+	trmIdx = 0;
     
     //read board addr
     setupUartDev(&console, &huart1, &tmr[trmIdx++], uartTxPool, TX_POOL_LEN, uartRxPool, RX_POOL_LEN, uartRxBuf, RX_BUF_LEN, 4);
@@ -200,7 +199,7 @@ void boardInit(void){
    
     printS("setup gpio driver...");
     outputDevSetup(&g_output, OUTPUT_PIN, 4, 0x00000000);
-    InputDevSetup(&g_input, OUTPUT_PIN, 5);
+    InputDevSetup(&g_input, INPUT_PIN, 3);
     printS("ok\r\n");
     
     TMC2160A_dev_Setup(
@@ -235,7 +234,7 @@ void boardInit(void){
     // setup ramp
     rampSetup(
         &stprRamp[0],
-        "m1",
+        "m0",
         &htim3,
         TIM_CHANNEL_1,
         &M0_DIR,
@@ -243,15 +242,13 @@ void boardInit(void){
         &M0_REFR,
         64
     );
-    
-    HAL_GPIO_WritePin(M0_DIR.GPIOx, M0_DIR.GPIO_Pin, GPIO_PIN_SET);
-    
+        
     // setup ramp
     rampSetup(
         &stprRamp[1],
-        "m2",
-        &htim1,
-        TIM_CHANNEL_4,
+        "m1",
+        &htim16,
+        TIM_CHANNEL_1,
         &M1_DIR,
         &M1_REFL,
         &M1_REFR,
@@ -272,6 +269,7 @@ void boardInit(void){
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[0], rampCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprRamp[1], rampCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &g_output, outputCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, &g_input, inputCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[0], tmc2160aCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[1], tmc2160aCmdU8);
     printS("ok\r\n");
@@ -392,7 +390,7 @@ u8 brdCmd(const char* CMD, void (*xprint)(const char* FORMAT_ORG, ...)){
     u8 brdAddr = g_boardAddr;
     // common
     if(strncmp(CMD, "about", strlen("about")) == 0){
-        xprint("+ok@%d.about(\"%s\")\r\n", brdAddr, ABOUT);
+        xprint("+ok@%d.about(\"%s\",%d)\r\n", brdAddr, ABOUT,g_tCounter);
         led_flash_answer(50, 30);
         return 1;
     }
@@ -490,17 +488,34 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
     
 }
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-    if(g_initalDone == 0){  return; }
-//	if(htim->Instance == htim1.Instance){
-//        stprRamp[1].isr(&stprRamp[1].rsrc, &htim1);
-//	}
-//    else if(htim->Instance == htim3.Instance){
-//        stprRamp[0].isr(&stprRamp[0].rsrc, &htim3);
-//    }
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin){
+	if(g_initalDone == 0)	return;
+	//print("falling\n");
+	stprRamp[0].isrReleasedRefL(&stprRamp[0].rsrc, GPIO_Pin);
+	stprRamp[0].isrReleasedRefR(&stprRamp[0].rsrc, GPIO_Pin);
+	stprRamp[1].isrReleasedRefL(&stprRamp[1].rsrc, GPIO_Pin);
+	stprRamp[1].isrReleasedRefR(&stprRamp[1].rsrc, GPIO_Pin);
 }
 
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin){
+	if(g_initalDone == 0)	return;
+	//print("Rising\n");
+	stprRamp[0].isrShelteredRefL(&stprRamp[0].rsrc, GPIO_Pin);
+	stprRamp[0].isrShelteredRefR(&stprRamp[0].rsrc, GPIO_Pin);
+	stprRamp[1].isrShelteredRefL(&stprRamp[1].rsrc, GPIO_Pin);
+	stprRamp[1].isrShelteredRefR(&stprRamp[1].rsrc, GPIO_Pin);
+}
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+    if(g_initalDone == 0){  return; }
+	if(htim->Instance == htim16.Instance){
+        g_tCounter++;
+        stprRamp[1].isr(&stprRamp[1].rsrc, &htim16);
+	}
+    else if(htim->Instance == htim3.Instance){
+        stprRamp[0].isr(&stprRamp[0].rsrc, &htim3);
+    }
+}
 
 /**
   * @brief  Conversion complete callback in non blocking mode

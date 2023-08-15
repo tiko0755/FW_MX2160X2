@@ -28,6 +28,7 @@ extern u8 g_baudHost;
 extern u8 g_baud485;
 extern u32 g_errorCode;
 extern u8 g_initalDone;
+extern u32 g_tCounter;
 
 extern INPUT_DEV_T g_input;
 extern OUTPUT_DEV_T g_output;
