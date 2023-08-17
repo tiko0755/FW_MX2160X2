@@ -36,7 +36,7 @@ extern UartDev_t console;
 //extern Rs485Dev_t rs485;
 extern rampDev_t stprRamp[2];
 
-#define APP_TIMER_COUNT (8)
+#define APP_TIMER_COUNT (16)
 extern appTmrDev_t tmr[APP_TIMER_COUNT];
 extern cmdConsumerDev_t cmdConsumer;
 
