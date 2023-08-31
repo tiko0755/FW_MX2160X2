@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32G070xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include;../../G0_COMMON/app_timer;../../G0_COMMON/cmd_consumer;../../G0_COMMON/gpio_input;../../G0_COMMON/gpio_output;../../G0_COMMON/ramp;../../G0_COMMON/TMC-API/ic/TMC2160;../../G0_COMMON/TMC2160A;../../G0_COMMON/ui;../../G0_COMMON/xAt24Cxx;../../G0_COMMON/xCRC16;../../G0_COMMON/xIIC_IO;../../G0_COMMON/xMisc;../../G0_COMMON/xRingBuffer;../../G0_COMMON/xRs485Dev;../../G0_COMMON/xUartDev;../Core/Src/board;../Core/Src/task;../Core/Src/max_tester_ui;../../G0_COMMON/usr_log</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include;../../G0_COMMON/app_timer;../../G0_COMMON/cmd_consumer;../../G0_COMMON/gpio_input;../../G0_COMMON/gpio_output;../../G0_COMMON/ramp;../../G0_COMMON/TMC-API/ic/TMC2160;../../G0_COMMON/TMC2160A;../../G0_COMMON/ui;../../G0_COMMON/xAt24Cxx;../../G0_COMMON/xCRC16;../../G0_COMMON/xIIC_IO;../../G0_COMMON/xMisc;../../G0_COMMON/xRingBuffer;../../G0_COMMON/xRs485Dev;../../G0_COMMON/xUartDev;../Core/Src/board;../Core/Src/task;../../G0_COMMON/usr_log;..\Core\Src\ui_max</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -587,6 +587,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\G0_COMMON\app_timer\app_timer.c</FilePath>
             </File>
+            <File>
+              <FileName>thread_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\app_timer\thread_delay.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -778,9 +783,14 @@
           <GroupName>usr/ui/instance</GroupName>
           <Files>
             <File>
-              <FileName>max_tester_ui.c</FileName>
+              <FileName>ui_machine.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\max_tester_ui\max_tester_ui.c</FilePath>
+              <FilePath>..\Core\Src\ui_max\ui_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>ui_cb_instance.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\ui_max\ui_cb_instance.c</FilePath>
             </File>
           </Files>
         </Group>

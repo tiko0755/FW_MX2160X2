@@ -24,9 +24,9 @@
 #include "rampCmd.h"
 #include "tmc2160a_cmd.h"
 
-#include "max_tester_ui.h"
+#include "ui_machine.h"
 #include "user_log.h"
-
+#include "task.h"
 
 #define NOUSED_PIN_INDX 255
 
@@ -174,7 +174,7 @@ void boardInit(void){
     u8 trmIdx = 0;
     // setup app timers
     for(trmIdx=0;trmIdx<APP_TIMER_COUNT;trmIdx++){
-        setup_appTmr(&tmr[trmIdx]);
+        setup_appTmr(&tmr[trmIdx], taskPolling);
     }
 	trmIdx = 0;
     
@@ -190,7 +190,7 @@ void boardInit(void){
 
     printS("setup lcd...");
     setupUartDev(&uiUartDev, &huart2, &tmr[trmIdx++], uiTxPool, UI_TX_POOL_LEN, uiRxPool, UI_RX_POOL_LEN, uiRxBuf, UI_RX_BUFF_LEN, 8);
-    max_tester_ui_initial(&uiUartDev, &tmr[trmIdx++]);
+    uiInstance_initial(&uiUartDev, &tmr[trmIdx++]);
     printS("ok\r\n");
 		
     // application initial
@@ -285,7 +285,7 @@ void boardInit(void){
 
     g_initalDone = 1;
     print("%d timers have been used\r\n", trmIdx);
-    printS("initial complete, type \"help\" for help\n");  
+    printS("initial complete, type \"help\" for help\n");
 }
 
 void printS(const char* STRING){
