@@ -41,8 +41,6 @@ extern appTmrDev_t tmr[APP_TIMER_COUNT];
 extern cmdConsumerDev_t cmdConsumer;
 
 extern const PIN_T DE;
-extern const PIN_T LAN_CS;
-extern const PIN_T LAN_IRQ;
 extern const PIN_T RUNNING;
 
 // gloable method
@@ -56,11 +54,6 @@ void print485(const char* FORMAT_ORG, ...);
 void printS485(const char* STRING);
 void printSUDP(const char* STRING);
 void printUDP(const char* FORMAT_ORG, ...);
-
-//s8 ioWrite(u16 addr, const u8 *pDat, u16 nBytes);
-//s8 ioRead(u16 addr, u8 *pDat, u16 nBytes);
-s8 ioWriteReg(u16 addr, s32 val);
-s8 ioReadReg(u16 addr, s32 * val);
 
 #endif
 

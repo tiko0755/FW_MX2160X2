@@ -369,7 +369,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32G070xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include;../../G0_COMMON/app_timer;../../G0_COMMON/cmd_consumer;../../G0_COMMON/gpio_input;../../G0_COMMON/gpio_output;../../G0_COMMON/ramp;../../G0_COMMON/TMC-API/ic/TMC2160;../../G0_COMMON/TMC2160A;../../G0_COMMON/ui;../../G0_COMMON/xAt24Cxx;../../G0_COMMON/xCRC16;../../G0_COMMON/xIIC_IO;../../G0_COMMON/xMisc;../../G0_COMMON/xRingBuffer;../../G0_COMMON/xRs485Dev;../../G0_COMMON/xUartDev;../Core/Src/board;../Core/Src/task;../../G0_COMMON/usr_log;..\Core\Src\ui_max</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include;../../G0_COMMON/app_timer;../../G0_COMMON/cmd_consumer;../../G0_COMMON/gpio_input;../../G0_COMMON/gpio_output;../../G0_COMMON/ramp;../../G0_COMMON/TMC-API/ic/TMC2160;../../G0_COMMON/TMC2160A;../../G0_COMMON/ui;../../G0_COMMON/xAt24Cxx;../../G0_COMMON/xCRC16;../../G0_COMMON/xIIC_IO;../../G0_COMMON/xMisc;../../G0_COMMON/xRingBuffer;../../G0_COMMON/xRs485Dev;../../G0_COMMON/xUartDev;../Core/Src/board;../Core/Src/task;../../G0_COMMON/usr_log;..\Core\Src\ui_max;..\..\G0_COMMON\disk;..\..\G0_COMMON\stm_flash</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -801,6 +801,31 @@
               <FileName>user_log.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\G0_COMMON\usr_log\user_log.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/stm_flash</GroupName>
+          <Files>
+            <File>
+              <FileName>stm_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\stm_flash\stm_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm_flash_Cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\stm_flash\stm_flash_Cmd.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>usr/disk</GroupName>
+          <Files>
+            <File>
+              <FileName>disk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\G0_COMMON\disk\disk.c</FilePath>
             </File>
           </Files>
         </Group>

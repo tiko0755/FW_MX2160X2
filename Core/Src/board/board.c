@@ -18,6 +18,9 @@
 #include "app_timer.h"
 #include "gpioDecal.h"
 
+#include "stm_flash.h"
+#include "disk.h"
+
 #include "led_flash.h"
 #include "outputCmd.h"
 #include "inputCmd.h"
@@ -27,6 +30,8 @@
 #include "ui_machine.h"
 #include "user_log.h"
 #include "task.h"
+
+
 
 #define NOUSED_PIN_INDX 255
 
@@ -158,14 +163,13 @@ const PIN_T SDA = {SDA_GPIO_Port, SDA_Pin};
 #define EEPROM_BASE_REG            (EEPROM_BASE_USER + EEPROM_SIZE_USR)
 #define EEPROM_BASE_NET            (EEPROM_BASE_REG + EEPROM_SIZE_NET)
 
-static s8 configWrite(void);
-static s8 configRead(void);
 static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...));
 static void forwardToBus(u8* BUFF, u16 len);
 
 /* Private function prototypes -----------------------------------------------*/
 // after GPIO initial, excute this function to enable
 void boardPreInit(void){
+    disk_setup(stmFlsh_read, stmFlsh_write);
 //    AT24CXX_Setup(&erom, &SCL, &SDA, AT24C64, 0X00);
 //    configRead();
 }
@@ -351,38 +355,30 @@ static void forwardToBus(u8* BUFF, u16 len){
     print("<%s BUFF:%s >", __func__, (char*)BUFF);
 }
 
-s8 ioReadReg(u16 addr, s32 *val){
-    return(erom.Read(&erom.rsrc, EEPROM_BASE_REG+addr*4, (u8*)val, 4));
-}
+//static s8 configWrite(void){
+//    u8 buff[32]={0};
+//    buff[14] = g_baudHost;
+//    buff[15] = g_baud485;
+//    buff[16] = HAL_GetTick()&0xff;            // mac[3]
+//    buff[17] = (HAL_GetTick()>>8)&0xff;        // mac[4]
+//    buff[18] = (HAL_GetTick()>>16)&0xff;    // mac[5]
+//    buff[31] = 0xaa;
+//    erom.Write(&erom.rsrc, EEPROM_BASE_NET, buff, 32);
+//    return 0;
+//}
 
-s8 ioWriteReg(u16 addr, s32 val){
-    return(erom.Write(&erom.rsrc, EEPROM_BASE_REG+addr*4, (u8*)&val, 4));
-}
+//static s8 configRead(void){
+//    u8 buff[32] = {0};
+//    erom.Read(&erom.rsrc, EEPROM_BASE_NET, buff, 32);
+//    if(buff[31] == 0xaa){
+//        g_baudHost = buff[14];
+//        g_baud485 = buff[15];
 
-static s8 configWrite(void){
-    u8 buff[32]={0};
-    buff[14] = g_baudHost;
-    buff[15] = g_baud485;
-    buff[16] = HAL_GetTick()&0xff;            // mac[3]
-    buff[17] = (HAL_GetTick()>>8)&0xff;        // mac[4]
-    buff[18] = (HAL_GetTick()>>16)&0xff;    // mac[5]
-    buff[31] = 0xaa;
-    erom.Write(&erom.rsrc, EEPROM_BASE_NET, buff, 32);
-    return 0;
-}
-
-static s8 configRead(void){
-    u8 buff[32] = {0};
-    erom.Read(&erom.rsrc, EEPROM_BASE_NET, buff, 32);
-    if(buff[31] == 0xaa){
-        g_baudHost = buff[14];
-        g_baud485 = buff[15];
-
-        if(g_baudHost >= 7)    g_baudHost = 4;    // 4@115200
-        if(g_baud485 >= 7)     g_baud485 = 4;    // 4@115200
-    }
-    return 0;
-}
+//        if(g_baudHost >= 7)    g_baudHost = 4;    // 4@115200
+//        if(g_baud485 >= 7)     g_baud485 = 4;    // 4@115200
+//    }
+//    return 0;
+//}
 
 static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...)){
     return(brdCmd((const char*)CMDu8, xprint));
