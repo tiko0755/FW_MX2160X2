@@ -1,26 +1,35 @@
 
 // page feeder, component name defines
-#define PG_MAIN		    ("pg10")
-#define MAIN_tbUnitR    ("t_unitr")
-#define MAIN_tbUnitY    ("t_unity")
+#define PG_MAIN             ("page0")
+#define MAIN_BtnNum_pConf   ("btn_pconf")
+#define MAIN_BtnNum_rConf   ("btn_rconf")
+#define MAIN_BtnNum_yConf   ("btn_yconf")
 
-#define MAIN_hSpdR      ("h_spdr")
-#define MAIN_hSpdY      ("h_spdy")
+#define MAIN_BtnNum_pos0    ("btn_pos0")
+#define MAIN_BtnNum_act0    ("btn_act0")
+#define MAIN_Btn_rst0       ("btn_rst0")
+
+#define MAIN_BtnNum_pos1    ("btn_pos1")
+#define MAIN_BtnNum_act1    ("btn_act1")
+#define MAIN_Btn_rst1       ("btn_rst1")
     
-#define MAIN_bPos1      ("b_pos1")
-#define MAIN_bPos2      ("b_pos2")
-#define MAIN_bPos3      ("b_pos3")
-#define MAIN_bPos4      ("b_pos4")
+#define MAIN_BtnNum_pos2    ("btn_pos2")
+#define MAIN_BtnNum_act2    ("btn_act2")
+#define MAIN_Btn_rst2       ("btn_rst2")
+
+#define MAIN_BtnNum_pos3    ("btn_pos3")
+#define MAIN_BtnNum_act3    ("btn_act3")
+#define MAIN_Btn_rst3       ("btn_rst3")
     
-#define MAIN_bRst1      ("b_rst1")
-#define MAIN_bRst2      ("b_rst2")
-#define MAIN_bRst3      ("b_rst3")
-#define MAIN_bRst4      ("b_rst4")
+#define MAIN_BtnNum_pos4    ("btn_pos4")
+#define MAIN_BtnNum_act4    ("btn_act4")
+#define MAIN_Btn_rst4       ("btn_rst4")
     
-#define MAIN_bAct1      ("b_act1")
-#define MAIN_bAct2      ("b_act2")
-#define MAIN_bAct3      ("b_act3")
-#define MAIN_bAct4      ("b_act4")
+#define MAIN_Btn_homimg     ("btn_homing")
+#define MAIN_Btn_emg        ("btn_emg")  
+#define MAIN_Btn_clamp      ("btn_clamp")  
+    
+    
     
 #define MAIN_bAuto      ("b_auto")
 #define MAIN_bStat      ("t_stat")

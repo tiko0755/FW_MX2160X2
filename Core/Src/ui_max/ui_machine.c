@@ -91,36 +91,36 @@ void  uiInstance_initial(
     uiSetup(&ui, uartDev, print_lcd);
     maxTest_tmr = tObj;
 
-    // new pages
+    // new MAIN page, and place components
     ui.NewPage(&ui.rsrc, PG_MAIN);   // 
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_pConf, 0);    // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_rConf, 0);    // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_yConf, 0);    // '0' without text
+    
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_pos0, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_act0, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_rst0, 0);         // '0' without text
+    
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_pos1, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_act1, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_rst1, 0);         // '0' without text
 
-    // setup pg00
-    ui.PlaceTxtBx(&ui.rsrc, PG_MAIN, MAIN_tbUnitR, 10);    // R axis mm/rev
-    ui.PlaceTxtBx(&ui.rsrc, PG_MAIN, MAIN_tbUnitY, 10);    // Y axis mm/rev
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_pos2, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_act2, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_rst2, 0);         // '0' without text
     
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_hSpdR);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_hSpdY);
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_pos3, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_act3, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_rst3, 0);         // '0' without text
     
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bPos1);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bPos2);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bPos3);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bPos4);
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_pos4, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_BtnNum_act4, 0);      // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_rst4, 0);         // '0' without text
     
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bRst1);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bRst2);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bRst3);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bRst4);
-    
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bAct1);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bAct2);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bAct3);
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bAct4);
-    
-    ui.PlacePic(&ui.rsrc, PG_MAIN, MAIN_bAuto);
-    ui.PlaceTxtBx(&ui.rsrc, PG_MAIN, MAIN_bStat, 32);
-    ui.PlaceTxtBx(&ui.rsrc, PG_MAIN, MAIN_tbSpdR, 8);
-    ui.PlaceTxtBx(&ui.rsrc, PG_MAIN, MAIN_tbSpdY, 8);
-    
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_homimg, 0);       // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_emg, 0);          // '0' without text
+    ui.PlaceComponent(&ui.rsrc, PG_MAIN, MAIN_Btn_clamp, 0);        // '0' without text
+
     uiInstanceSqu = 0;  // initial
     maxTest_tmr->start(&maxTest_tmr->rsrc, MAX_TEST_POLLING_TIM, POLLING_REPEAT, maxTest_task, NULL);
         
@@ -134,31 +134,29 @@ static void maxTest_task(void* e){
 }
 
 static void machine_initPg10(void){
-    print("<%s >", __func__);
-    s32 i,y;
-    // inital pg10
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbUnitR, "txt", "%d.%d", mmPerRev_r/1000, (mmPerRev_r%1000)/100);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbUnitY, "txt", "%d.%d", mmPerRev_y/1000, (mmPerRev_y%1000)/100);
-    
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdR, "minval", "%d", MIN_SPEED_MM_PER_SEC);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdY, "minval", "%d", MIN_SPEED_MM_PER_SEC);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdR, "maxval", "%d", MAX_SPEED_MM_PER_SEC);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdY, "maxval", "%d", MAX_SPEED_MM_PER_SEC);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdR, "val", "%d", spd_r);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdY, "val", "%d", spd_y);
-    
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_bStat, "txt", " ");
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbSpdR, "txt", "%d", spd_r);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbSpdY, "txt", "%d", spd_y);
+//    print("<%s >", __func__);
+//    s32 i,y;
+//    // inital pg10
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbUnitR, "txt", "%d.%d", mmPerRev_r/1000, (mmPerRev_r%1000)/100);
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbUnitY, "txt", "%d.%d", mmPerRev_y/1000, (mmPerRev_y%1000)/100);
+//    
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdR, "minval", "%d", MIN_SPEED_MM_PER_SEC);
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdY, "minval", "%d", MIN_SPEED_MM_PER_SEC);
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdR, "maxval", "%d", MAX_SPEED_MM_PER_SEC);
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdY, "maxval", "%d", MAX_SPEED_MM_PER_SEC);
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdR, "val", "%d", spd_r);
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_hSpdY, "val", "%d", spd_y);
+//    
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_bStat, "txt", " ");
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbSpdR, "txt", "%d", spd_r);
+//    ui.Set(&ui.rsrc, PG_MAIN, MAIN_tbSpdY, "txt", "%d", spd_y);
 
-    // bind on event
-    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbUnitR, UI_EVNT_CHANGE, ui_onChanged_main_tbUnitR);
-    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbUnitY, UI_EVNT_CHANGE, ui_onChanged_main_tbUnitY);
-    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbSpdR, UI_EVNT_CHANGE, ui_onChanged_main_tbSpdR);
-    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbSpdY, UI_EVNT_CHANGE, ui_onChanged_main_tbSpdY);
-    
-    
-    
+//    // bind on event
+//    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbUnitR, UI_EVNT_CHANGE, ui_onChanged_main_tbUnitR);
+//    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbUnitY, UI_EVNT_CHANGE, ui_onChanged_main_tbUnitY);
+//    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbSpdR, UI_EVNT_CHANGE, ui_onChanged_main_tbSpdR);
+//    ui.Bind(&ui.rsrc, PG_MAIN, MAIN_tbSpdY, UI_EVNT_CHANGE, ui_onChanged_main_tbSpdY);
+
 }
 
 

@@ -9,58 +9,58 @@
 #include "user_log.h"
 
 void ui_onChanged_main_tbUnitR(int argc, ...){
-	s32 x;
+    s32 x;
     float f;
-	va_list ap;
-	char*p;
-	if(argc == 1){
-		va_start(ap, argc);
-		p = va_arg(ap, char*);
-		va_end(ap);
-		f = atof(p);
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        f = atof(p);
         mmPerRev_r = f*1000;
     }
 }
 
 void ui_onChanged_main_tbUnitY(int argc, ...){
-	s32 x;
+    s32 x;
     float f;
-	va_list ap;
-	char*p;
-	if(argc == 1){
-		va_start(ap, argc);
-		p = va_arg(ap, char*);
-		va_end(ap);
-		f = atof(p);
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        f = atof(p);
         mmPerRev_y = f*1000;
     }
 }
 
 void ui_onChanged_main_tbSpdR(int argc, ...){
-	s32 x;
+    s32 x;
     float f;
-	va_list ap;
-	char*p;
-	if(argc == 1){
-		va_start(ap, argc);
-		p = va_arg(ap, char*);
-		va_end(ap);
-		spd_r = atoi(p);
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        spd_r = atoi(p);
         log("<%s spd_r:%d >", __func__, spd_r);
     }
 }
 
 
 void ui_onChanged_main_tbSpdY(int argc, ...){
-	s32 x;
+    s32 x;
     float f;
-	va_list ap;
-	char*p;
-	if(argc == 1){
-		va_start(ap, argc);
-		p = va_arg(ap, char*);
-		va_end(ap);
-		spd_y = atoi(p);
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        spd_y = atoi(p);
         log("<%s spd_y:%d >", __func__, spd_y);
     }
 }
