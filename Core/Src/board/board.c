@@ -16,9 +16,11 @@
 #include "main.h"
 #include "at24cxx.h"
 #include "app_timer.h"
+#include "thread_delay.h"
 #include "gpioDecal.h"
 
 #include "stm_flash.h"
+#include "stm_flash_cmd.h"
 #include "disk.h"
 
 #include "led_flash.h"
@@ -155,13 +157,13 @@ AT24CXX_Dev_T erom;
 const PIN_T SCL = {SCL_GPIO_Port, SCL_Pin};
 const PIN_T SDA = {SDA_GPIO_Port, SDA_Pin};
 // define app eeprom size
-#define EEPROM_SIZE_USR            (6*1024)
-#define EEPROM_SIZE_REG            (1*1024)
-#define EEPROM_SIZE_NET            (1*1024)
-// define app eeprom base address
-#define EEPROM_BASE_USER        0
-#define EEPROM_BASE_REG            (EEPROM_BASE_USER + EEPROM_SIZE_USR)
-#define EEPROM_BASE_NET            (EEPROM_BASE_REG + EEPROM_SIZE_NET)
+//#define EEPROM_SIZE_USR            (6*1024)
+//#define EEPROM_SIZE_REG            (1*1024)
+//#define EEPROM_SIZE_NET            (1*1024)
+//// define app eeprom base address
+//#define EEPROM_BASE_USER        0
+//#define EEPROM_BASE_REG            (EEPROM_BASE_USER + EEPROM_SIZE_USR)
+//#define EEPROM_BASE_NET            (EEPROM_BASE_REG + EEPROM_SIZE_NET)
 
 static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...));
 static void forwardToBus(u8* BUFF, u16 len);
@@ -169,32 +171,34 @@ static void forwardToBus(u8* BUFF, u16 len);
 /* Private function prototypes -----------------------------------------------*/
 // after GPIO initial, excute this function to enable
 void boardPreInit(void){
+    u8 trmIdx = 0;
+    // setup app timers
+    for(trmIdx=0;trmIdx<APP_TIMER_COUNT;trmIdx++){
+        setup_appTmr(&tmr[trmIdx], taskPolling);
+    }
+    thread_delay_init(&tmr[0]);
+    
+    stmFlsh_initial(ADDR_FLASH_PAGE_63,1);
     disk_setup(stmFlsh_read, stmFlsh_write);
 //    AT24CXX_Setup(&erom, &SCL, &SDA, AT24C64, 0X00);
 //    configRead();
 }
 
 void boardInit(void){
-    u8 trmIdx = 0;
-    // setup app timers
-    for(trmIdx=0;trmIdx<APP_TIMER_COUNT;trmIdx++){
-        setup_appTmr(&tmr[trmIdx], taskPolling);
-    }
-	trmIdx = 0;
-    
+	u8 trmIdx = 1;
+
     //read board addr
     setupUartDev(&console, &huart1, &tmr[trmIdx++], uartTxPool, TX_POOL_LEN, uartRxPool, RX_POOL_LEN, uartRxBuf, RX_BUF_LEN, 4);
     memset(g_addrPre,0,4);
     strFormat(g_addrPre, 4, "%d.", g_boardAddr);
+    print("%sabout(\"%s\")\r\n", g_addrPre, ABOUT);    
     
     logInitial(printS);
-    log("logger is running");
-    
-    print("%sabout(\"%s\")\r\n", g_addrPre, ABOUT);
+    log("xlogger is running");
 
     printS("setup lcd...");
     setupUartDev(&uiUartDev, &huart2, &tmr[trmIdx++], uiTxPool, UI_TX_POOL_LEN, uiRxPool, UI_RX_POOL_LEN, uiRxBuf, UI_RX_BUFF_LEN, 8);
-    uiInstance_initial(&uiUartDev, &tmr[trmIdx++]);
+//    uiInstance_initial(&uiUartDev, &tmr[trmIdx++]);
     printS("ok\r\n");
 		
     // application initial
@@ -206,7 +210,7 @@ void boardInit(void){
     outputDevSetup(&g_output, OUTPUT_PIN, 4, 0x00000000);
     InputDevSetup(&g_input, INPUT_PIN, 3);
     printS("ok\r\n");
-    
+        
     TMC2160A_dev_Setup(
         &stprDrv[0], 
         "drv0",
@@ -216,9 +220,9 @@ void boardInit(void){
         &DRV0_DIA1,
         &hspi1, 
         0,
-        EEPROM_BASE_USER,
-        NULL,   //s8 (*ioWrite)(u16 addr, const u8 *pDat, u16 nBytes),
-        NULL    //s8 (*ioRead)(u16 addr, u8 *pDat, u16 nBytes)
+        USR_2160_0_BASE,
+        usrWrite,   
+        usrRead    
     );
     
     TMC2160A_dev_Setup(
@@ -230,9 +234,9 @@ void boardInit(void){
         &DRV1_DIA1,
         &hspi1, 
         1,
-        EEPROM_BASE_USER,
-        NULL,   //s8 (*ioWrite)(u16 addr, const u8 *pDat, u16 nBytes),
-        NULL    //s8 (*ioRead)(u16 addr, u8 *pDat, u16 nBytes)
+        USR_2160_1_BASE,
+        usrWrite,    
+        usrRead    
     );
 
     printS("setup ramp...");
@@ -279,6 +283,8 @@ void boardInit(void){
     cmdConsumer.append(&cmdConsumer.rsrc, &g_input, inputCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[0], tmc2160aCmdU8);
     cmdConsumer.append(&cmdConsumer.rsrc, &stprDrv[1], tmc2160aCmdU8);
+    cmdConsumer.append(&cmdConsumer.rsrc, NULL, stmFlsh_Cmd);
+
     printS("ok\r\n");
     
     // get ready, start to work
@@ -355,31 +361,6 @@ static void forwardToBus(u8* BUFF, u16 len){
     print("<%s BUFF:%s >", __func__, (char*)BUFF);
 }
 
-//static s8 configWrite(void){
-//    u8 buff[32]={0};
-//    buff[14] = g_baudHost;
-//    buff[15] = g_baud485;
-//    buff[16] = HAL_GetTick()&0xff;            // mac[3]
-//    buff[17] = (HAL_GetTick()>>8)&0xff;        // mac[4]
-//    buff[18] = (HAL_GetTick()>>16)&0xff;    // mac[5]
-//    buff[31] = 0xaa;
-//    erom.Write(&erom.rsrc, EEPROM_BASE_NET, buff, 32);
-//    return 0;
-//}
-
-//static s8 configRead(void){
-//    u8 buff[32] = {0};
-//    erom.Read(&erom.rsrc, EEPROM_BASE_NET, buff, 32);
-//    if(buff[31] == 0xaa){
-//        g_baudHost = buff[14];
-//        g_baud485 = buff[15];
-
-//        if(g_baudHost >= 7)    g_baudHost = 4;    // 4@115200
-//        if(g_baud485 >= 7)     g_baud485 = 4;    // 4@115200
-//    }
-//    return 0;
-//}
-
 static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...)){
     return(brdCmd((const char*)CMDu8, xprint));
 }
@@ -401,26 +382,21 @@ u8 brdCmd(const char* CMD, void (*xprint)(const char* FORMAT_ORG, ...)){
         HAL_NVIC_SystemReset();
         return 1;
     }
-
+    else if(sscanf(CMD, "reg.write %d 0x%x ", &i, &j)==2){
+        if(ioWriteReg(i,j) == 0)    xprint("+ok@%d.reg.write(%d,0x%08x)\r\n", brdAddr, i, j);
+        else xprint("+err@%d.reg.write(%d,0x%08x)\r\n", brdAddr, i, j);
+        return 1;
+    }
     else if(sscanf(CMD, "reg.write %d %d ", &i, &j)==2){
-        if(i>=EEPROM_SIZE_REG/4)    {
-            xprint("+err@%d.reg.write(\"address[0..%d]\")\r\n", brdAddr, EEPROM_SIZE_REG/4);
-            return 1;
-        }
         if(ioWriteReg(i,j) == 0)    xprint("+ok@%d.reg.write(%d,%d)\r\n", brdAddr, i, j);
         else xprint("+err@%d.reg.write(%d,%d)\r\n", brdAddr, i, j);
         return 1;
     }
+
     else if(sscanf(CMD, "reg.read %d ", &i)==1){
-        if(i>=EEPROM_SIZE_REG/4){
-            xprint("+err@%d.reg.read(\"address[0..%d]\")\r\n", brdAddr, EEPROM_SIZE_REG/4);
-            return 1;
-        }
-        ioReadReg(i,&j);
-        xprint("+ok@%d.reg.read(%d,%d)\r\n", brdAddr, i, j);
-//        if(ioReadReg(i,&j) == 0)
-//            xprint("+ok@%d.reg.read(%d,%d)\r\n", brdAddr, i, j);
-//        else xprint("+err@%d.reg.read(%d,%d)\r\n", brdAddr, i, j);
+        if((ioReadReg!=NULL)&&(ioReadReg(i,&j) == 0))
+            xprint("+ok@%d.reg.read(%d,%d,0x%08x)\r\n", brdAddr, i, j, j);
+        else xprint("+err@%d.reg.read(%d)\r\n", brdAddr, i);
         return 1;
     }
 
