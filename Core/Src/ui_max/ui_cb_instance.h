@@ -4,7 +4,38 @@
 #include "misc.h"
 #include <stdarg.h>
 
-void ui_onChanged_main_tbUnitR(int argc, ...);
+void ui_onEdit_thickness(int argc, ...);
+void ui_onEdit_r_rev(int argc, ...);
+void ui_onEdit_y_rev(int argc, ...);
+
+void ui_onEdit_ps0(int argc, ...);
+void ui_onEdit_ps0_act(int argc, ...);
+
+void ui_onEdit_ps1(int argc, ...);
+void ui_onEdit_ps1_act(int argc, ...);
+
+void ui_onEdit_ps2(int argc, ...);
+void ui_onEdit_ps2_act(int argc, ...);
+
+void ui_onEdit_ps3(int argc, ...);
+void ui_onEdit_ps3_act(int argc, ...);
+
+void ui_onEdit_ps4(int argc, ...);
+void ui_onEdit_ps4_act(int argc, ...);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void ui_onChanged_main_tbUnitY(int argc, ...);
 
 void ui_onChanged_main_tbSpdR(int argc, ...);

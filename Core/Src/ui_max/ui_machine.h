@@ -23,12 +23,13 @@ typedef struct{
 #pragma pack(pop)       //recover align bytes from 4 bytes
 
 extern uiDev_T ui;
-extern u16 mmPerRev_r;  // in um
-extern u16 mmPerRev_y;  // in um
-extern u16 spd_r;       // in mm/sec
-extern u16 spd_y;       // in mm/sec
-extern u32 posR[4];
-extern u32 posY[4];
+extern u32 thickNess;   // in 1/1000 mm
+extern u32 perRev_r;    // in 1/1000 degree
+extern u32 perRev_y;    // in 1/1000 mm
+extern u32 spd_r;       // in mm/sec
+extern u32 spd_y;       // in mm/sec
+extern u32 posR[5];
+extern u32 posY[5];
 extern u8 uiInstanceSqu;
 
 extern uiInstancePos_t* uiInstRunPrg[UI_INSTANCE_POS_COUNT];
@@ -36,10 +37,16 @@ extern uiInstancePos_t* uiInstRunPrg[UI_INSTANCE_POS_COUNT];
 // delegate for manual operate
 extern u8 uiInstanceEvntMannual;
 
-void  uiInstance_initial(
+void  uiInstance_setup(
     UartDev_t* uartDev,
-    appTmrDev_t* tObj
+    appTmrDev_t* tObj,
+    u16 ioBase,
+    s32 (*ioWrite)(u16 addr, const u8 *pDat, u16 nBytes),
+    s32 (*ioRead)(u16 addr, u8 *pDat, u16 nBytes)
 );
 
+void uiInstance_initial();
+void uiInstanceSaveConf(void);
+    
 #endif
 

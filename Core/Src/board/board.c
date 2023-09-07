@@ -156,14 +156,6 @@ TMC2160A_dev_t stprDrv[2];
 AT24CXX_Dev_T erom;
 const PIN_T SCL = {SCL_GPIO_Port, SCL_Pin};
 const PIN_T SDA = {SDA_GPIO_Port, SDA_Pin};
-// define app eeprom size
-//#define EEPROM_SIZE_USR            (6*1024)
-//#define EEPROM_SIZE_REG            (1*1024)
-//#define EEPROM_SIZE_NET            (1*1024)
-//// define app eeprom base address
-//#define EEPROM_BASE_USER        0
-//#define EEPROM_BASE_REG            (EEPROM_BASE_USER + EEPROM_SIZE_USR)
-//#define EEPROM_BASE_NET            (EEPROM_BASE_REG + EEPROM_SIZE_NET)
 
 static u8 brdCmdU8(void* d, u8* CMDu8, u8 len, void (*xprint)(const char* FORMAT_ORG, ...));
 static void forwardToBus(u8* BUFF, u16 len);
@@ -185,7 +177,7 @@ void boardPreInit(void){
 }
 
 void boardInit(void){
-	u8 trmIdx = 1;
+    u8 trmIdx = 1;
 
     //read board addr
     setupUartDev(&console, &huart1, &tmr[trmIdx++], uartTxPool, TX_POOL_LEN, uartRxPool, RX_POOL_LEN, uartRxBuf, RX_BUF_LEN, 4);
@@ -198,9 +190,9 @@ void boardInit(void){
 
     printS("setup lcd...");
     setupUartDev(&uiUartDev, &huart2, &tmr[trmIdx++], uiTxPool, UI_TX_POOL_LEN, uiRxPool, UI_RX_POOL_LEN, uiRxBuf, UI_RX_BUFF_LEN, 8);
-//    uiInstance_initial(&uiUartDev, &tmr[trmIdx++]);
+    uiInstance_setup(&uiUartDev, &tmr[trmIdx++], USR_UI_BASE, usrWrite, usrRead);
     printS("ok\r\n");
-		
+    
     // application initial
     printS("setup led_flash...");
     led_flash_init(&tmr[trmIdx++], &RUNNING, 100);     // now, it can run itself
@@ -289,11 +281,14 @@ void boardInit(void){
     
     // get ready, start to work
     console.StartRcv(&console.rsrc);
-		
+    
 //    rs485.rsrc.uartdev.StartRcv(&rs485.rsrc.uartdev.rsrc);
 //    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
 
     g_initalDone = 1;
+    
+    uiInstance_initial();
+    
     print("%d timers have been used\r\n", trmIdx);
     printS("initial complete, type \"help\" for help\n");
 }
