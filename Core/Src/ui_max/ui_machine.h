@@ -8,6 +8,9 @@ filename: ui_machine.h
 #include "uartdev.h"
 #include "app_timer.h"
 #include "ui.h"
+#include "motion_path_2axis.h"
+#include "board.h"
+
 
 #define UI_INSTANCE_POS_COUNT   (16)
 
@@ -18,21 +21,44 @@ filename: ui_machine.h
 typedef struct{
     s32 r;
     s32 y;
-}uiInstancePos_t;
+    u32 delay;
+}uiInstPos_t;
 
 #pragma pack(pop)       //recover align bytes from 4 bytes
 
 extern uiDev_T ui;
-extern u32 thickNess;   // in 1/1000 mm
-extern u32 perRev_r;    // in 1/1000 degree
-extern u32 perRev_y;    // in 1/1000 mm
+
+extern u16 slotDepth;  // total slot depth
+extern u16 thickNess;   // in 1/100 mm
+extern u16 perRev_r;  // in 1/100 degree
+extern u16 perRev_y;  // in 1/100 mm
+
 extern u32 spd_r;       // in mm/sec
 extern u32 spd_y;       // in mm/sec
 extern u32 posR[5];
 extern u32 posY[5];
+
+extern u8 isAuto;
+extern u8 isEmerg;
+extern u8 isClamp;
+
+extern u16 repoCount_0;
+extern s8 repoCount_1;
+extern s8 repoCount_2;
+extern s8 repoCount_3;
+extern s8 repoCount_4;
+extern u16 maxCount;
+
+
+
+
+
 extern u8 uiInstanceSqu;
 
-extern uiInstancePos_t* uiInstRunPrg[UI_INSTANCE_POS_COUNT];
+extern mPath2Dev_t mPlayer;
+extern mPath2PosNode* mPath;
+
+extern uiInstPos_t* uiInstRunPrg[UI_INSTANCE_POS_COUNT];
 
 // delegate for manual operate
 extern u8 uiInstanceEvntMannual;
@@ -46,7 +72,14 @@ void  uiInstance_setup(
 );
 
 void uiInstance_initial();
-void uiInstanceSaveConf(void);
+s32 uiInstanceSaveConf(void);
+
+s32 angleToMStep(u32 degree);    // angle in 1/100 degree
+s32 distanceToMStep(u32 dist);  // dist in 1/100 mm
+    
+// move to target workplace
+//s32 uiInstGoto_prc(u32 targetR, u32 targetY);    
+    
     
 #endif
 

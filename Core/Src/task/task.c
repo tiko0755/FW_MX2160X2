@@ -50,20 +50,12 @@ void taskIrq(void){
   */
 void taskPolling(void){
     if(g_initalDone == 0)    return;
-    
-    // poll to send out 
-//    console.TxPolling(&console.rsrc);
-//		uiUartDev.TxPolling(&uiUartDev.rsrc);
-    
-    u8 i;
-    for(i=0;i<APP_TIMER_COUNT;i++){
+
+    for(u8 i=0;i<APP_TIMER_COUNT;i++){
         tmr[i].polling(&tmr[i].rsrc);
     }
-
+    
     if(task_tick >= 4){
-//        console.RxPolling(&console.rsrc);
-//				uiUartDev.RxPolling(&uiUartDev.rsrc);
-//				ui.Polling(&ui.rsrc, 4);
         task_tick = 0;
     }
 }

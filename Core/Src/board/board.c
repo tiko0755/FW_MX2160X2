@@ -168,6 +168,7 @@ void boardPreInit(void){
     for(trmIdx=0;trmIdx<APP_TIMER_COUNT;trmIdx++){
         setup_appTmr(&tmr[trmIdx], taskPolling);
     }
+    
     thread_delay_init(&tmr[0]);
     
     stmFlsh_initial(ADDR_FLASH_PAGE_63,1);

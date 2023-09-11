@@ -10,26 +10,28 @@
 #define MAIN_PS0_ACT        ("b_act0")
 // POSITON 1
 #define MAIN_PS1            ("b_pos1")
-#define MAIN_PS1_RST        ("b_rst1")
 #define MAIN_PS1_ACT        ("b_act1")
 // POSITON 2
 #define MAIN_PS2            ("b_pos2")
-#define MAIN_PS2_RST        ("b_rst2")
 #define MAIN_PS2_ACT        ("b_act2")
 // POSITON 3
 #define MAIN_PS3            ("b_pos3")
-#define MAIN_PS3_RST        ("b_rst3")
 #define MAIN_PS3_ACT        ("b_act3")
 // POSITON 4 
 #define MAIN_PS4            ("b_pos4")
-#define MAIN_PS4_RST        ("b_rst4")
 #define MAIN_PS4_ACT        ("b_act4")
 
 #define MAIN_HOMING         ("b_homing")
+#define MAIN_AUTO           ("b_auto")  
 #define MAIN_EMERGENCY      ("b_emg")  
 #define MAIN_CLAMP          ("b_clamp")  
 #define MAIN_PG_SWITCH      ("b_pages")
 
+#define MAIN_REPO0          ("repo0")
+#define MAIN_REPO1          ("repo1")
+#define MAIN_REPO2          ("repo2")
+#define MAIN_REPO3          ("repo3")
+#define MAIN_REPO4          ("repo4")
 
 
 
