@@ -330,50 +330,76 @@ s32 uiInstanceSaveConf(void){
     if(uiInst_ioWrite==NULL){
         return -1;
     }
-    uiInst_ioWrite(addr, (const u8*)&thickNess, 4);
+    
+    uiInst_ioWrite(addr, (const u8*)&slotDepth, sizeof(slotDepth));
+    checkSum += slotDepth;  
+    addr += sizeof(slotDepth);
+    thread_delay(5);
+    
+    uiInst_ioWrite(addr, (const u8*)&thickNess, sizeof(thickNess));
     checkSum += thickNess;  
-    addr += 4;
+    addr += sizeof(thickNess);
     thread_delay(5);
     
-    uiInst_ioWrite(addr, (const u8*)&perRev_r, 4);   
+    uiInst_ioWrite(addr, (const u8*)&perRev_r, sizeof(perRev_r));   
     checkSum += perRev_r;  
-    addr += 4;
+    addr += sizeof(perRev_r);
     thread_delay(5);
     
-    uiInst_ioWrite(addr, (const u8*)&perRev_y, 4);   
+    uiInst_ioWrite(addr, (const u8*)&perRev_y, sizeof(perRev_y));   
     checkSum += perRev_y;  
-    addr += 4;
+    addr += sizeof(perRev_y);
     thread_delay(5);
     
-    for(i=0;i<5;i++){
-        uiInst_ioWrite(addr, (u8*)&posR[i], 4);
-        checkSum += posR[i];  
-        addr += 4;
-        thread_delay(5);
-    }
-    
-    for(i=0;i<5;i++){
-        uiInst_ioWrite(addr, (u8*)&posY[i], 4);
-        checkSum += posY[i];  
-        addr += 4;
-        thread_delay(5);
-    }
-    
-//    for(i=0;i<5;i++){
-//        uiInst_ioWrite(addr, (u8*)&slotCount[i], 2);   
-//        checkSum += slotCount[i];  
-//        addr += 2;
-//        thread_delay(5);
-//    }
-    
-    uiInst_ioWrite(addr, (const u8*)&spd_r, 4);   
+    uiInst_ioWrite(addr, (const u8*)&spd_r, sizeof(spd_r));   
     checkSum += spd_r;  
-    addr += 4;
+    addr += sizeof(spd_r);
     thread_delay(5);
     
-    uiInst_ioWrite(addr, (const u8*)&spd_y, 4);   
+    uiInst_ioWrite(addr, (const u8*)&spd_y, sizeof(spd_y));   
     checkSum += spd_y;  
-    addr += 4;
+    addr += sizeof(spd_y);
+    thread_delay(5);
+    
+    uiInst_ioWrite(addr, (const u8*)&cur_r, sizeof(cur_r));   
+    checkSum += cur_r;  
+    addr += sizeof(cur_r);
+    thread_delay(5);
+    
+    uiInst_ioWrite(addr, (const u8*)&cur_y, sizeof(cur_y));   
+    checkSum += cur_y;  
+    addr += sizeof(cur_y);
+    thread_delay(5);
+
+    for(i=0;i<5;i++){
+        uiInst_ioWrite(addr, (u8*)&posR[i], sizeof(posR));
+        checkSum += posR[i];  
+        addr += sizeof(posR);
+        thread_delay(5);
+    }
+    
+    for(i=0;i<5;i++){
+        uiInst_ioWrite(addr, (u8*)&posY[i], sizeof(posY));
+        checkSum += posY[i];  
+        addr += sizeof(posY);
+        thread_delay(5);
+    }
+    
+    uiInst_ioWrite(addr, (const u8*)&statusBits, sizeof(statusBits));
+    checkSum += statusBits;  
+    addr += sizeof(statusBits);
+    thread_delay(5);
+    
+    for(i=0;i<5;i++){
+        uiInst_ioWrite(addr, (u8*)&repoCount[i], sizeof(repoCount));
+        checkSum += repoCount[i];
+        addr += sizeof(repoCount);
+        thread_delay(5);
+    }
+    
+    uiInst_ioWrite(addr, (const u8*)&maxCount, sizeof(maxCount));
+    checkSum += maxCount;  
+    addr += sizeof(maxCount);
     thread_delay(5);
     
     uiInst_ioWrite(uiInst_ioBase, (const u8*)&checkSum, 4);  
@@ -388,54 +414,80 @@ static s32 uiInstanceReadConf(void){
         return -1;
     }
     
-    uiInst_ioRead(uiInst_ioBase, (u8*)&checkCode, 4); 
-//    log("<%s checkCode:%08x >", __func__, checkCode);
+    uiInst_ioRead(uiInst_ioBase, (u8*)&checkCode, sizeof checkCode);
+    addr = uiInst_ioBase + sizeof(checkCode);
+//    log("<%s slotDepth:%08x >", __func__, slotDepth);
     
-    uiInst_ioRead(addr, (u8*)&thickNess, 4);
+    uiInst_ioRead(addr, (u8*)&slotDepth, sizeof(slotDepth));
+    addr += sizeof(slotDepth);  
+    checkSum += slotDepth;
+//    log("<%s slotDepth:%08x >", __func__, slotDepth);
+    
+    uiInst_ioRead(addr, (u8*)&thickNess, sizeof(thickNess));
+    addr += sizeof(thickNess);  
     checkSum += thickNess;
-    addr += 4;  
 //    log("<%s thickNess:%08x >", __func__, thickNess);
     
-    uiInst_ioRead(addr, (u8*)&perRev_r, 4);   
-    checkSum += perRev_r;  
-    addr += 4;
+    uiInst_ioRead(addr, (u8*)&perRev_r, sizeof(perRev_r));
+    addr += sizeof(perRev_r);  
+    checkSum += perRev_r;
 //    log("<%s perRev_r:%08x >", __func__, perRev_r);
     
-    uiInst_ioRead(addr, (u8*)&perRev_y, 4);   
-    checkSum += perRev_y;  
-    addr += 4;
+    uiInst_ioRead(addr, (u8*)&perRev_y, sizeof(perRev_y));
+    addr += sizeof(perRev_y);  
+    checkSum += perRev_r;
 //    log("<%s perRev_y:%08x >", __func__, perRev_y);
+
+    uiInst_ioRead(addr, (u8*)&spd_r, sizeof(spd_r));
+    addr += sizeof(spd_r);  
+    checkSum += spd_r;
+//    log("<%s spd_r:%08x >", __func__, spd_r);
+
+    uiInst_ioRead(addr, (u8*)&spd_y, sizeof(spd_y));
+    addr += sizeof(spd_y);  
+    checkSum += spd_y;
+//    log("<%s spd_y:%08x >", __func__, spd_y);
     
+    uiInst_ioRead(addr, (u8*)&cur_r, sizeof(cur_r));
+    addr += sizeof(cur_r);  
+    checkSum += cur_r;
+//    log("<%s cur_r:%08x >", __func__, cur_r);
+    
+    uiInst_ioRead(addr, (u8*)&cur_y, sizeof(cur_y));
+    addr += sizeof(cur_y);  
+    checkSum += cur_y;
+//    log("<%s cur_y:%08x >", __func__, cur_y);
+
     for(i=0;i<5;i++){
-        uiInst_ioRead(addr, (u8*)&posR[i], 4);   
-        checkSum += posR[i];  
-        addr += 4;
+        uiInst_ioRead(addr, (u8*)&posR[i], sizeof(posR[i]));
+        addr += sizeof(posR[i]);  
+        checkSum += posR[i];
 //        log("<%s posR[%d]:%08x >", __func__, i, posR[i]);
     }
     
     for(i=0;i<5;i++){
-        uiInst_ioRead(addr, (u8*)&posY[i], 4);   
-        checkSum += posY[i];  
-        addr += 4;
+        uiInst_ioRead(addr, (u8*)&posY[i], sizeof(posY[i]));
+        addr += sizeof(posY[i]);  
+        checkSum += posY[i];
 //        log("<%s posY[%d]:%08x >", __func__, i, posY[i]);
     }
     
-//    for(i=0;i<5;i++){
-//        uiInst_ioRead(addr, (u8*)&slotCount[i], 2);   
-//        checkSum += slotCount[i];  
-//        addr += 2;
-////        log("<%s slotCount[%d]:%08x >", __func__, i, slotCount[i]);
-//    }
+    uiInst_ioRead(addr, (u8*)&statusBits, sizeof(statusBits));
+    addr += sizeof(statusBits);
+    checkSum += statusBits;
+//    log("<%s statusBits:%08x >", __func__, statusBits);
     
-    uiInst_ioRead(addr, (u8*)&spd_r, 4);   
-    checkSum += spd_r;  
-    addr += 4;
-//    log("<%s spd_r:%08x >", __func__, spd_r);
+    for(i=0;i<5;i++){
+        uiInst_ioRead(addr, (u8*)&repoCount[i], sizeof(repoCount[i]));
+        addr += sizeof(repoCount[i]);  
+        checkSum += repoCount[i];
+//        log("<%s repoCount[%d]:%08x >", __func__, i, repoCount[i]);
+    }
     
-    uiInst_ioRead(addr, (u8*)&spd_y, 4);   
-    checkSum += spd_y;  
-    addr += 4;
-//    log("<%s spd_y:%08x >", __func__, spd_y);
+    uiInst_ioRead(addr, (u8*)&maxCount, sizeof(maxCount));
+    addr += sizeof(maxCount);
+    checkSum += maxCount;
+//    log("<%s maxCount:%08x >", __func__, maxCount);
     
     if(checkCode != checkSum){
 //        log("<%s checkCode:0x%08x checkSum:0x%08x >", __func__,checkCode,checkSum);
