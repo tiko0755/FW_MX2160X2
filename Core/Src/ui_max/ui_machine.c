@@ -35,6 +35,8 @@ u16 perRev_y = 2400;  // in 1/100 mm
 
 u32 spd_r = 340; // in mm/sec
 u32 spd_y = 300; // in mm/sec
+u16 cur_r;
+u16 cur_y;
 u32 posR[5] = {6000, 12000, 18000, 24000, 30000};
 u32 posY[5] = {61250, 61261, 61252, 61273, 61284};    // about 600mm, in 1/100 mm
 //s16 slotCount[5] = {0};
@@ -42,12 +44,14 @@ u32 posY[5] = {61250, 61261, 61252, 61273, 61284};    // about 600mm, in 1/100 m
 u8 isAuto = 0;
 u8 isEmerg = 0;
 u8 isClamp = 0;
+u16 statusBits;
+s16 repoCount[5];
 
-u16 repoCount_0 = 0;
-s8 repoCount_1 = 0;
-s8 repoCount_2 = 0;
-s8 repoCount_3 = 0;
-s8 repoCount_4 = 0;
+//u16 repoCount_0 = 0;
+//s8 repoCount_1 = 0;
+//s8 repoCount_2 = 0;
+//s8 repoCount_3 = 0;
+//s8 repoCount_4 = 0;
 u16 maxCount = 999;
 
 u8 uiInstanceSqu = 0;
@@ -236,21 +240,12 @@ static void machine_initPg00(void){
     ui.Set(&ui.rsrc, PG_MAIN, MAIN_EMERGENCY, UI_ATTR_VAL, "%d", isEmerg);
     ui.Set(&ui.rsrc, PG_MAIN, MAIN_CLAMP, UI_ATTR_VAL, "%d", isClamp);
 
-//u16 repoCount_0 = 0;
-//s8 repoCount_1 = 0;
-//s8 repoCount_2 = 0;
-//s8 repoCount_3 = 0;
-//s8 repoCount_4 = 0;
-//u16 maxCount = 999;
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", repoCount_0);
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount_1));
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount_2));
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount_3));
-    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount_4));
+    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount[0]));
+    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount[1]));
+    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount[2]));
+    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount[3]));
+    ui.Set(&ui.rsrc, PG_MAIN, MAIN_REPO0, UI_ATTR_TXT, "%d", abs(repoCount[4]));
 
-    
-    
-    
 //    // bind on event
     ui.Bind(&ui.rsrc, PG_MAIN, MAIN_THICKNESS, UI_EVNT_EDIT_STR, ui_onEdit_thickness);
     ui.Bind(&ui.rsrc, PG_MAIN, MAIN_R_REV, UI_EVNT_EDIT_STR, ui_onEdit_r_rev);

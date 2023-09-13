@@ -338,6 +338,10 @@ void ui_onClick_psX_rst(int argc, ...){
 static void ui_onClick_psX_act(s32 dist){
     log("<%s dist:%d >", __func__, dist);
     s32 pos;
+    
+    // open clamp
+    g_output.WritePin(&g_output.rsrc, 0, 0);
+    
     ui_onClick_psX_rst(1, NULL);
     pos = distanceToMStep(dist);
     stprRamp[1].rsrc.spdMax = 64500;
@@ -345,6 +349,10 @@ static void ui_onClick_psX_act(s32 dist){
     while(pos != stprRamp[1].rsrc.posCur){
         thread_delay(50);
     }
+
+    // close clamp
+    g_output.WritePin(&g_output.rsrc, 0, 1);
+    
     log("</%s >", __func__);
 }
 
@@ -361,8 +369,6 @@ static void ui_onClick_psX(u32 angle){
     log("</%s >", __func__);
 }
 
-
-
 void ui_onClick_ps0(int argc, ...){    ui_onClick_psX(posR[0]); }
 void ui_onClick_ps1(int argc, ...){    ui_onClick_psX(posR[1]); }
 void ui_onClick_ps2(int argc, ...){    ui_onClick_psX(posR[2]); }
@@ -374,10 +380,6 @@ void ui_onClick_ps1_act(int argc, ...){ ui_onClick_psX_act(posY[1]);    }
 void ui_onClick_ps2_act(int argc, ...){ ui_onClick_psX_act(posY[2]);    }
 void ui_onClick_ps3_act(int argc, ...){ ui_onClick_psX_act(posY[3]);    }
 void ui_onClick_ps4_act(int argc, ...){ ui_onClick_psX_act(posY[4]);    }
-
-
-
-
 
 void ui_onClick_main_bAuto(int argc, ...){
 }

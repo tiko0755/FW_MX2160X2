@@ -46,7 +46,7 @@ extern u8 isAuto;
 extern u8 isEmerg;
 extern u8 isClamp;
 
-extern u16 repoCount[5];
+extern s16 repoCount[5];
 extern u16 maxCount;
 
 
