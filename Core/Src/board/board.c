@@ -201,7 +201,7 @@ void boardInit(void){
    
     printS("setup gpio driver...");
     outputDevSetup(&g_output, OUTPUT_PIN, 4, 0x00000000);
-    InputDevSetup(&g_input, INPUT_PIN, 3);
+    InputDevSetup(&g_input, INPUT_PIN, 3, &tmr[trmIdx++]);
     printS("ok\r\n");
         
     TMC2160A_dev_Setup(
@@ -282,6 +282,7 @@ void boardInit(void){
     
     // get ready, start to work
     console.StartRcv(&console.rsrc);
+    g_input.Start(&g_input.rsrc, 100);
     
 //    rs485.rsrc.uartdev.StartRcv(&rs485.rsrc.uartdev.rsrc);
 //    HAL_GPIO_WritePin(rs485.rsrc.DE.GPIOx, rs485.rsrc.DE.GPIO_Pin, GPIO_PIN_RESET);
@@ -414,7 +415,23 @@ u8 brdCmd(const char* CMD, void (*xprint)(const char* FORMAT_ORG, ...)){
         xprint("+ok@%d.baud.get(%d,%d)\r\n", brdAddr, BAUD[g_baudHost], BAUD[g_baud485]);
         return 1;
     }
-
+    
+    else if(strncmp(CMD, "ui.cfg.write", strlen("ui.cfg.write"))==0){
+        uiInstanceSaveConf();
+        xprint("+ok@ui.cfg.write()\r\n");
+        return 1;
+    }
+    else if(strncmp(CMD, "ui.cfg.read", strlen("ui.cfg.read"))==0){
+        uiInstanceReadConf();
+        xprint("+ok@ui.cfg.read()\r\n");
+        return 1;
+    }
+    else if(strncmp(CMD, "ui.cfg.default", strlen("ui.cfg.default"))==0){
+        defaultConf();
+        xprint("+ok@ui.cfg.default()\r\n");
+        return 1;
+    }
+    
     return 0;
 }
 

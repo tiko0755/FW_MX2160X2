@@ -44,129 +44,19 @@ extern u32 posY[5];
 extern u16 statusBits;
 extern u8 isAuto;
 extern u8 isEmerg;
+extern u8 isHoming;
 extern u8 isClamp;
 
-extern s16 repoCount[5];
+extern volatile s16 repoCount[5];
 extern u16 maxCount;
 
-
 extern u8 uiInstanceSqu;
+extern u8 uiAutoSqu,uiAutoSquNxt;
 
 extern mPath2Dev_t mPlayer;
 extern mPath2PosNode* mPath;
 
 extern uiInstPos_t* uiInstRunPrg[UI_INSTANCE_POS_COUNT];
-
-
-
-
-
-//s32 uiInstanceSaveConf(void){
-//    u32 checkSum = 0xa5;
-//    s32 i;
-//    u16 addr = uiInst_ioBase + 4;
-//    if(uiInst_ioWrite==NULL){
-//        return -1;
-//    }
-//    
-//    uiInst_ioWrite(addr, (const u8*)&slotDepth, 2);
-//    checkSum += slotDepth;  
-//    addr += 2;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&thickNess, 2);
-//    checkSum += thickNess;  
-//    addr += 2;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&perRev_r, 2);   
-//    checkSum += perRev_r;  
-//    addr += 2;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&perRev_y, 2);   
-//    checkSum += perRev_y;  
-//    addr += 2;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&spd_r, 4);   
-//    checkSum += spd_r;  
-//    addr += 4;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&spd_y, 4);   
-//    checkSum += spd_y;  
-//    addr += 4;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&cur_r, 2);   
-//    checkSum += cur_r;  
-//    addr += 2;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&cur_y, 2);   
-//    checkSum += cur_y;  
-//    addr += 2;
-//    thread_delay(5);
-
-//    for(i=0;i<5;i++){
-//        uiInst_ioWrite(addr, (u8*)&posR[i], 4);
-//        checkSum += posR[i];  
-//        addr += 4;
-//        thread_delay(5);
-//    }
-//    
-//    for(i=0;i<5;i++){
-//        uiInst_ioWrite(addr, (u8*)&posY[i], 4);
-//        checkSum += posY[i];  
-//        addr += 4;
-//        thread_delay(5);
-//    }
-//    
-//    uiInst_ioWrite(addr, (const u8*)&statusBits, 2);
-//    checkSum += statusBits;  
-//    addr += 2;
-//    thread_delay(5);
-//    
-//    for(i=0;i<5;i++){
-//        uiInst_ioWrite(addr, (u8*)&repoCount[i], 2);
-//        checkSum += repoCount[i];
-//        addr += 2;
-//        thread_delay(5);
-//    }
-//    
-//    uiInst_ioWrite(addr, (const u8*)&maxCount, 2);
-//    checkSum += maxCount;  
-//    addr += 2;
-//    thread_delay(5);
-
-//    uiInst_ioWrite(addr, (const u8*)&spd_r, 4);   
-//    checkSum += spd_r;  
-//    addr += 4;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(addr, (const u8*)&spd_y, 4);   
-//    checkSum += spd_y;  
-//    addr += 4;
-//    thread_delay(5);
-//    
-//    uiInst_ioWrite(uiInst_ioBase, (const u8*)&checkSum, 4);  
-//    return 0;
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // delegate for manual operate
 extern u8 uiInstanceEvntMannual;
@@ -181,13 +71,13 @@ void  uiInstance_setup(
 
 void uiInstance_initial();
 s32 uiInstanceSaveConf(void);
-
+s32 uiInstanceReadConf(void);
+void defaultConf();
 s32 angleToMStep(u32 degree);    // angle in 1/100 degree
 s32 distanceToMStep(u32 dist);  // dist in 1/100 mm
     
 // move to target workplace
 //s32 uiInstGoto_prc(u32 targetR, u32 targetY);    
-    
     
 #endif
 

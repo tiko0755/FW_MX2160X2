@@ -326,11 +326,14 @@ void ui_onEdit_y_rev(int argc, ...){
 
 void ui_onClick_psX_rst(int argc, ...){
     log("<%s >", __func__);
+    if(isEmerg || isAuto || isHoming){  return; }
     s32 pos;
     mPlayer.stop(&mPlayer.rsrc);
-    stprRamp[1].gohome(&stprRamp[1].rsrc, 64500);
+    stprRamp[1].gohome(&stprRamp[1].rsrc, 65200);
     while(stprRamp[1].rsrc.posCur){
+        if(stprRamp[1].isRotating(&stprRamp[1].rsrc)){  break;  }
         thread_delay(50);
+        ui.Polling(&ui.rsrc, 50);   // allow to poll other task
     }
     log("</%s >", __func__);
 }
@@ -338,33 +341,32 @@ void ui_onClick_psX_rst(int argc, ...){
 static void ui_onClick_psX_act(s32 dist){
     log("<%s dist:%d >", __func__, dist);
     s32 pos;
-    
-    // open clamp
-    g_output.WritePin(&g_output.rsrc, 0, 0);
-    
+    if(isEmerg || isAuto || isHoming){  return; }
+
     ui_onClick_psX_rst(1, NULL);
     pos = distanceToMStep(dist);
-    stprRamp[1].rsrc.spdMax = 64500;
+    stprRamp[1].rsrc.spdMax = 65200;
     stprRamp[1].moveTo(&stprRamp[1].rsrc, pos);
     while(pos != stprRamp[1].rsrc.posCur){
+        if(stprRamp[1].isRotating(&stprRamp[1].rsrc)){  break;  }
         thread_delay(50);
+        ui.Polling(&ui.rsrc, 50);   // allow to poll other task
     }
-
-    // close clamp
-    g_output.WritePin(&g_output.rsrc, 0, 1);
-    
     log("</%s >", __func__);
 }
 
 static void ui_onClick_psX(u32 angle){
     log("<%s angle:%d >", __func__, angle);
     s32 pos;
+    if(isEmerg || isAuto || isHoming){  return; }
     ui_onClick_psX_rst(1, NULL);
     pos = angleToMStep(angle);
-    stprRamp[0].rsrc.spdMax = 65000;
+    stprRamp[0].rsrc.spdMax = 62000;
     stprRamp[0].moveTo(&stprRamp[0].rsrc, pos);
     while(pos != stprRamp[0].rsrc.posCur){
+        if(stprRamp[1].isRotating(&stprRamp[1].rsrc)){  break;  }
         thread_delay(50);
+        ui.Polling(&ui.rsrc, 50);   // allow to poll other task
     }
     log("</%s >", __func__);
 }
@@ -382,4 +384,226 @@ void ui_onClick_ps3_act(int argc, ...){ ui_onClick_psX_act(posY[3]);    }
 void ui_onClick_ps4_act(int argc, ...){ ui_onClick_psX_act(posY[4]);    }
 
 void ui_onClick_main_bAuto(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        uiAutoSquNxt = 0xff;
+        if(sscanf(p, "%d", &val)==1){
+            log("<%s val=%d isAuto:%d >",__func__,val,isAuto);
+            if(val==0){
+                if(uiAutoSqu > 0){
+                    uiAutoSquNxt = 0;   // stop
+                    ui.Set(&ui.rsrc, PG_MAIN, MAIN_AUTO, UI_ATTR_VAL, "1"); //will terminate in another loop
+                }
+            }
+            else{
+                isAuto = 1;
+                if(uiAutoSqu == 0){
+                    uiAutoSqu = 1;
+                }
+            }
+        }
+        stprRamp[0].stop(&stprRamp[0].rsrc);
+        stprRamp[1].stop(&stprRamp[1].rsrc);
+    }
+    log("</%s >", __func__);
 }
+
+void ui_onClick_emergence(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "%d", &val)==1){
+            if(val==0)
+                isEmerg = 0;
+            else
+                isEmerg = 1;
+        }
+        stprRamp[0].stop(&stprRamp[0].rsrc);
+        stprRamp[1].stop(&stprRamp[1].rsrc);
+    }
+    log("</%s >", __func__);    
+}
+
+void ui_onClick_homing(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "%d", &val)==1){
+            if(val==0)
+                isHoming = 0;
+            else
+                isHoming = 1;
+        }
+        if(isHoming){
+            stprRamp[1].homing(&stprRamp[1].rsrc, 65000);
+            while(stprRamp[1].isHoming(&stprRamp[1].rsrc)){
+                thread_delay(50);
+            }
+            stprRamp[0].homing(&stprRamp[0].rsrc, 60000);
+            while(stprRamp[0].isHoming(&stprRamp[0].rsrc)){
+                thread_delay(50);
+            }
+            ui.Set(&ui.rsrc, PG_MAIN, MAIN_HOMING, UI_ATTR_VAL, "0");
+            isHoming = 0;
+        }
+
+        
+    }
+    log("</%s >", __func__);    
+}
+
+void ui_onClick_clamp(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "%d", &val)==1){
+            if(val==0){
+                isClamp = 0;
+                // open clamp
+                g_output.WritePin(&g_output.rsrc, 0, 0);
+            }
+            else{
+                isClamp = 1;
+                // close clamp
+                g_output.WritePin(&g_output.rsrc, 0, 1);
+            }
+        }
+    }
+    log("</%s >", __func__);    
+}
+
+void ui_onEdit_repo0(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "%d", &val)==1){
+//            repoCount[0] = val;
+            uiInstanceSaveConf();
+            ui.rsrc.uiPrint("page page0");
+        }
+    }
+    log("</%s >", __func__); 
+}
+
+void ui_onEdit_repo1(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "\"%d\"", &val)==1){
+            repoCount[1] = val;
+            uiInstanceSaveConf();
+        }
+    }
+    log("</%s >", __func__); 
+}
+
+void ui_onEdit_repo2(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "%d", &val)==1){
+            repoCount[2] = val;
+            uiInstanceSaveConf();
+            ui.rsrc.uiPrint("page page2");
+        }
+    }
+    log("</%s >", __func__); 
+}
+
+void ui_onEdit_repo3(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "%d", &val)==1){
+            repoCount[3] = val;
+            uiInstanceSaveConf();
+            ui.rsrc.uiPrint("page page3");
+        }
+    }
+    log("</%s >", __func__); 
+}
+
+void ui_onEdit_repo4(int argc, ...){
+    log("<%s argc:%d >", __func__, argc);
+    s32 val;
+    va_list ap;
+    char*p;
+    if(argc == 1){
+        va_start(ap, argc);
+        p = va_arg(ap, char*);
+        va_end(ap);
+        if(sscanf(p, "%d", &val)==1){
+            repoCount[4] = val;
+            uiInstanceSaveConf();
+            ui.rsrc.uiPrint("page page4");
+        }
+    }
+    log("</%s >", __func__); 
+}
+
+//void ui_onClick_auto(int argc, ...){
+//    log("<%s argc:%d >", __func__, argc);
+//    s32 val;
+//    va_list ap;
+//    char*p;
+//    if(argc == 1){
+//        va_start(ap, argc);
+//        p = va_arg(ap, char*);
+//        va_end(ap);
+//        if(sscanf(p, "%d", &val)==1){
+//            if(val==0){
+//                isAuto = 0;
+//                uiAutoSquNxt = 0;
+//                log("<%s uiAutoSquNxt:0 >", __func__);
+//            }
+//            else{
+//                isAuto = 1;
+//                uiAutoSquNxt = 1;
+//                log("<%s uiAutoSquNxt:1 >", __func__);
+//            }
+//        }
+//    }
+//    log("</%s >", __func__);    
+//}
+
